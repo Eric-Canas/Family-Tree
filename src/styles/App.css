@@ -1,0 +1,42 @@
+.add-node-button {
+  margin: 0 auto;
+}
+
+.individual-form {
+  margin: 20px 20px;
+}
+.individual-form .left-of-picture {
+  width: calc(100% - 215px - 5%);
+}
+
+.complementary-info-nav {
+  margin-bottom: 10px;
+}
+
+.avatar-picture-wrapper {
+  width: fit-content;
+}
+.avatar-picture-wrapper .update-avatar-btn {
+  position: absolute;
+  left: calc(215px + 6px);
+}
+.avatar-picture-wrapper img {
+  width: 215px;
+  border-radius: 3px;
+}
+
+.invisible {
+  display: none !important;
+}
+
+.modalForm {
+  min-width: 80%;
+}
+
+@media (max-width: 768px) {
+  .individual-form .left-of-picture {
+    width: 100%;
+  }
+}
+
+/*# sourceMappingURL=App.css.map */
