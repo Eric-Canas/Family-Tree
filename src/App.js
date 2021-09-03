@@ -1,11 +1,11 @@
 import './styles/App.css';
-import AddNodeButton from './model/components/addNodeButton';
+import FamilyTreeContainer from './model/components/familyTreeContainer';
 
 function App() {
-  //<AddNodeButton ID="ME"/>
+  //<AddNodeButton kin="Albaby Galletita Maria"/>
   return (
     <div className="App">
-      <AddNodeButton kin="Albaby Galletita Maria"/>
+        <FamilyTreeContainer/>
     </div>
   );
 }

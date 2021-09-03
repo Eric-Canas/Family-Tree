@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import { Label, Input, Col } from 'reactstrap';
+import { DISEASES_LIST } from '../../../constants';
+import TagsSelector from '../../auxiliars/tagsSelector';
 
 class HealthDetails extends Component {
 
     render() {
         return (<React.Fragment>
                     <Col md="12">
-                        <Label for="known-diseases">Known Diseases</Label>
-                        <Input type="textarea" id="known-diseases" rows="2" placeholder="Known diseases (separated with colons: (Asperger, Myopia, Recurrent Stomachaches...)). After first point (.), include any additional information"></Input>
+                        <TagsSelector label="Known Diseases" options={DISEASES_LIST} saveDefinedTags={(tagsList) => this.props.saveInfo("knownDiseases", tagsList)}/>
+                        <Label for="health-details">Other Details</Label>
+                        <Input type="textarea" id="health-details" rows="2" placeholder="Other Health Details" 
+                                onBlur={(event) => this.props.saveInfo("healthDetails", event.target.value)}/>
                     </Col>
                 </React.Fragment>
                 )

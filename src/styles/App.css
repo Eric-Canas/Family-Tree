@@ -9,6 +9,11 @@
   width: calc(100% - 215px - 5%);
 }
 
+.form-label {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
 .complementary-info-nav {
   margin-bottom: 10px;
 }
@@ -20,22 +25,62 @@
   position: absolute;
   left: calc(215px + 6px);
 }
+.avatar-picture-wrapper .update-avatar-double-btn {
+  position: absolute;
+  left: calc(215px - 31px);
+}
 .avatar-picture-wrapper img {
   width: 215px;
   border-radius: 3px;
+}
+
+.country-flag,
+.input-icon {
+  height: 24px;
+}
+
+.tag-close-icon {
+  margin-left: 8px;
+}
+
+#family-tree-container .tree-node {
+  border: 3px solid gray;
 }
 
 .invisible {
   display: none !important;
 }
 
-.modalForm {
-  min-width: 80%;
+.modal-form {
+  min-width: 85%;
+}
+
+.modal-body {
+  align-self: center;
+}
+
+.avatar-cropper div img {
+  max-height: 75vh;
 }
 
 @media (max-width: 768px) {
   .individual-form .left-of-picture {
     width: 100%;
+  }
+  .individual-form .avatar-picture-wrapper {
+    margin: 0px auto;
+  }
+  .individual-form .avatar-picture-wrapper .update-avatar-btn {
+    position: absolute;
+    left: calc(58% + 6px);
+  }
+  .individual-form .avatar-picture-wrapper .update-avatar-double-btn {
+    position: absolute;
+    left: calc(58% - 31px);
+  }
+  .individual-form .avatar-picture-wrapper img {
+    width: 215px;
+    border-radius: 3px;
   }
 }
 

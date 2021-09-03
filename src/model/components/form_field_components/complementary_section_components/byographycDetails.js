@@ -1,24 +1,41 @@
 import React, { Component } from 'react';
 import { Label, Input, Col } from 'reactstrap';
+import TagsSelector from '../../auxiliars/tagsSelector';
+import { PROFESSIONS_LIST } from '../../../constants';
+import { capitalize } from '../../../auxiliars'
 
 class ByographycDetails extends Component {
+    constructor(props) {
+        super(props);
+        this.updateAlias = this.updateAlias.bind(this);
+    }
+
+    updateAlias(event) {
+        let value = event.target.value.trim();
+        if (value !== "") {
+            // First letter to UpperCase
+            value = capitalize(value);
+            event.target.value = value;
+        }
+        this.props.saveInfo("alias", value);
+    }
 
     render() {
         return (<React.Fragment>
-                    <Col md="9">
-                        <Label for="profession" className="form-label">Profession</Label>
-                        <Input type="text" id="profession" placeholder="Profession (Separated with colos if multiple: Teacher, Carpenter...)" />
-                    </Col>
-                    <Col md="3">
-                        <Label htmlFor="alias" className="form-label">Alias</Label>
-                        <Input type="text" id="alias" placeholder="Alias" />
-                    </Col>
-                    <Col md="12">
-                        <Label htmlFor="biography">Biography</Label>
-                        <Input type="textarea" id="biography" rows="3" placeholder="He/She had a difficult relation with his/her parents..."></Input>
-                    </Col>
-                </React.Fragment>
-                )
+            <Col md="9">
+                <TagsSelector label="Professions" options={PROFESSIONS_LIST} saveDefinedTags={(tagsList) => this.props.saveInfo("professions", tagsList)} />
+            </Col>
+            <Col md="3">
+                <Label htmlFor="alias" className="form-label">Alias</Label>
+                <Input type="text" id="alias" placeholder="Alias" onBlur={(event) => this.updateAlias(event)} />
+            </Col>
+            <Col md="12">
+                <Label htmlFor="biography">Biography</Label>
+                <Input type="textarea" id="biography" rows="3" placeholder="He/She had a difficult relation with his/her parents..."
+                    onBlur={(event) => this.props.saveInfo("byography", event.target.value)} />
+            </Col>
+        </React.Fragment>
+        )
     }
 }
 

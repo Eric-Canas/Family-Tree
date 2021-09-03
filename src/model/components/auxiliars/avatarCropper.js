@@ -82,9 +82,10 @@ class CropperModal extends PureComponent {
         return (
             <Modal isOpen={this.props.modal} toggle={this.props.toggle} className="modalForm">
                 <ModalHeader toggle={this.props.toggle}>Crop the avatar</ModalHeader>
-                <ModalBody>
+                <ModalBody className="modal-body">
                     {this.props.src && (
                         <ReactCrop
+                            className = "avatar-cropper"
                             src={this.props.src}
                             crop={this.state.crop}
                             ruleOfThirds

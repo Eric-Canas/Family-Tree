@@ -1,23 +1,41 @@
 import React, { Component } from 'react';
-import { Label, Input, Col } from 'reactstrap';
+import { Label, Input, Col,} from 'reactstrap';
+import { COUNTRIES } from '../../../constants'
+import CountryInput from './countryInput';
+import ProvinceInput from './provinceInput';
+import {stringToID,capitalize} from '../../../auxiliars'
 
 class LocationDetails extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { currentKnownCountry: null }
+        this.currentCountryProvinces = () => this.state.currentKnownCountry !== null? COUNTRIES[this.state.currentKnownCountry].provinces : [];
+    }
+
+    setCity(event){
+        const capitalized = capitalize(event.target.value)
+        this.props.saveInfo(this.props.situation.toLowerCase()+'City', capitalized)
+        event.target.value = capitalized;
+
+    }
 
     render() {
         return (
             <React.Fragment>
                 <Col md="4">
-                    <Label for="born-country" className="form-label">Born Country</Label>
-                    <Input type="text" id="born-country" placeholder="Born Country" />
+                    <CountryInput saveCountry = {(country) => this.props.saveInfo(this.props.situation.toLowerCase()+'Country', country)}
+                     setSelectedCountry={(country) => this.setState({ currentKnownCountry: country })} selectedCountry={this.state.currentKnownCountry}
+                     label = {this.props.situation+" Country"}/>
                 </Col>
                 <Col md="4">
-                    <Label for="born-state" className="form-label">Born State</Label>
-                    <Input type="text" id="born-state" placeholder="Born State" />
+                    <ProvinceInput label={this.props.situation+" Province/State"} availableProvices={this.currentCountryProvinces()} 
+                                    saveProvince = {(province) => this.props.saveInfo(this.props.situation.toLowerCase()+'Province', province)}/>
                 </Col>
 
                 <Col md="4">
-                    <Label for="born-city" className="form-label">Born City</Label>
-                    <Input type="text" id="born-city" placeholder="Born City" />
+                    <Label for={stringToID(this.props.situation)+'-city'} className="form-label">Born City</Label>
+                    <Input type="text" id={stringToID(this.props.situation)+'-city'} placeholder={this.props.situation+" City"}
+                    onBlur={(event) => this.setCity(event)}/>
                 </Col>
             </React.Fragment>);
     }

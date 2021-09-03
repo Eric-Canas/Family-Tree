@@ -18,7 +18,7 @@ class AddNodeButton extends Component {
                         {NODE_RELATIONS.map(relationship => <Button key={relationship} type="button" className="btn btn-secondary" aria-label={"Adds a "+relationship}
                                                                     onClick={this.showHideForm.bind(this, relationship)}>{relationship}</Button>)}
                     </div>
-                    <ModalForm modal={this.state.showModal} toggle={this.showHideForm.bind(this, null)} relationship={this.state.relationship} kin={this.props.kin}/>
+                    <ModalForm modal={this.state.showModal} close={this.showHideForm.bind(this, null)} relationship={this.state.relationship} kin={this.props.kin} save={this.props.save}/>
                 </React.Fragment>
         )
     }

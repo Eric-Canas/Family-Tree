@@ -21,32 +21,29 @@ class IndividualForm extends Component {
             <Form className="row individual-form">
                 <Row>
                     <Col md="auto">
-                        <AvatarPicture />
+                        <AvatarPicture saveInfo={this.props.updateNode}/>
                     </Col>
                     <Col md="6" lg="7" xl="8" xxl="10" className="left-of-picture">
-                        <BasicInformation />
+                        <BasicInformation saveInfo={this.props.updateNode}/>
                     </Col>
                 </Row>
 
                 <Row>
-                    <Defunction alive={this.state.alive} setAlive={this.setAlive.bind(this)}/>
+                    <Defunction alive={this.state.alive} setAlive={this.setAlive.bind(this)} saveInfo={this.props.updateNode} getSavedInfo={this.props.getNodeInfo}/>
                     <Col md="auto" sm={this.state.alive? "auto" : "12"}>
-                        <GenderSelector />
+                        <GenderSelector saveInfo={this.props.updateNode}/>
                     </Col>
                 </Row>
 
-                <ComplementaryInfoNavBar alive={this.state.alive}/>
+                <ComplementaryInfoNavBar alive={this.state.alive} saveInfo={this.props.updateNode}/>
 
                 <div className="col-12">
                     <div className="form-check">
-                        <input className="form-check-input" type="checkbox" id="relevant" />
-                        <label className="form-check-label" htmlFor="relevant">
+                        <input className="form-check-input" type="checkbox" id="highlight" onChange={(event) => this.props.updateNode('highlight', event.target.checked)} />
+                        <label className="form-check-label" htmlFor="highlight">
                             Highlight
                         </label>
                     </div>
-                </div>
-                <div className="col-12">
-                    <button className="btn btn-primary" type="submit">Save</button>
                 </div>
             </Form>
         )
