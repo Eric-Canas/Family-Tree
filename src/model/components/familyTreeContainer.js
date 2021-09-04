@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import FamilyGraph from '../../controllers/familyGraph';
 import TreeNode from './treeNode';
 import AddIndependentNodeButton from './addIndependentNodeButton';
+import {Col, Row} from 'reactstrap'
+
 class FamilyTreeContainer extends Component {
     constructor(props) {
         super(props);
@@ -18,7 +20,12 @@ class FamilyTreeContainer extends Component {
 
     render() {
         return (<section id="family-tree-container">
-                    {this.state.nodes.map(node => <TreeNode key={node.properties.id} node={node.properties} />)}
+                    {this.state.nodes.map(node => (<Row key={node.id+"-row"}>
+                                                    <Col md={8} key={node.id+"-col"}>
+                                                    <TreeNode key={node.id} node={node} />
+                                                    </Col>
+                                                    </Row>
+                                                  ))}
                     {this.state.nodes.length === 0? <AddIndependentNodeButton text="Plant the tree" save={this.saveNode}/> : null}
                 </section>
         )

@@ -49,9 +49,23 @@ $imgWidth: 215px;
     margin-left: 8px;
 }
 
+.arrow-icon{
+    margin-right: 8px;
+    margin-left: 8px;
+}
+
+.add-node-tooltip{
+    .tooltip-inner{
+        background-color: #000000dd;
+        max-width: 100%;
+    }
+}
+
 #family-tree-container {
     .tree-node {
-        border: 3px solid gray;
+        .country-flag{
+            max-height: 20px; 
+        }
     }
 }
 

@@ -1,3 +1,6 @@
+
+import { COUNTRIES, FLAGS_URL, FLAGS_FORMAT } from '../model/constants'
+
 function stringToID(string){
     return string.trim().toLowerCase().replace(" ", "-").replace("/", "-");
 }
@@ -22,3 +25,8 @@ function getRandomNumber(range=1000000){
     return ~~(Math.random()*range)
 }
 export {getRandomNumber};
+
+function countryFlagURL(countryName){
+    return FLAGS_URL + COUNTRIES[countryName].code.toLowerCase() + FLAGS_FORMAT;
+}
+export {countryFlagURL};
