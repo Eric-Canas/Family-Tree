@@ -23,16 +23,16 @@ class ByographycDetails extends Component {
     render() {
         return (<React.Fragment>
             <Col md="9">
-                <TagsSelector label="Professions" options={PROFESSIONS_LIST} saveDefinedTags={(tagsList) => this.props.saveInfo("professions", tagsList)} />
+                <TagsSelector label="Professions" options={PROFESSIONS_LIST} saveDefinedTags={(tagsList) => this.props.saveInfo("professions", tagsList)} initialState={this.props.getNodeInfo('professions')}/>
             </Col>
             <Col md="3">
                 <Label htmlFor="alias" className="form-label">Alias</Label>
-                <Input type="text" id="alias" placeholder="Alias" onBlur={(event) => this.updateAlias(event)} />
+                <Input type="text" id="alias" placeholder="Alias" defaultValue={this.props.getNodeInfo('alias')} onBlur={(event) => this.updateAlias(event)} />
             </Col>
             <Col md="12">
                 <Label htmlFor="biography">Biography</Label>
                 <Input type="textarea" id="biography" rows="3" placeholder="He/She had a difficult relation with his/her parents..."
-                    onBlur={(event) => this.props.saveInfo("byography", event.target.value)} />
+                    onBlur={(event) => this.props.saveInfo("biography", event.target.value)} defaultValue={this.props.getNodeInfo('biography')} />
             </Col>
         </React.Fragment>
         )

@@ -9,10 +9,10 @@ class ComplementaryInfoNavBar extends Component {
     constructor(props) {
         super(props);
         this.COMPLEMENTARY_SECTIONS = {
-                                        "Byography": <ByographycDetails saveInfo={this.props.saveInfo} />,
-                                        "Location": <LocationDetails saveInfo={this.props.saveInfo} situation="Birth"/>,
-                                        "Health": <HealthDetails saveInfo={this.props.saveInfo}/>,
-                                        "Defunction": <DefunctionDetails saveInfo={this.props.saveInfo}/>
+                                        "Byography": <ByographycDetails saveInfo={this.props.saveInfo} getNodeInfo={this.props.getNodeInfo}/>,
+                                        "Location": <LocationDetails saveInfo={this.props.saveInfo} situation="Birth" getNodeInfo={this.props.getNodeInfo}/>,
+                                        "Health": <HealthDetails saveInfo={this.props.saveInfo} getNodeInfo={this.props.getNodeInfo}/>,
+                                        "Defunction": <DefunctionDetails saveInfo={this.props.saveInfo} getNodeInfo={this.props.getNodeInfo}/>
                                        }
         this.state = { active: null };
         //Change context or close if same button is clicked twice

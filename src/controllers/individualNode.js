@@ -7,8 +7,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
 class IndividualNode {
-    constructor(node) {
-        this.id = (~~(Math.random() * 10000)).toString();
+    constructor(id, node) {
+        this.id = id;
         this.properties = {
             avatar: node.avatar || DEFAULT_AVATAR,
             name: node.name || null,
@@ -23,7 +23,7 @@ class IndividualNode {
             gender: node.gender || null,
             professions: node.professions || [],
             alias: node.alias || null,
-            byography: node.byography || null,
+            biography: node.biography || null,
             birthCountry: node.birthCountry || null,
             birthProvince: node.birthProvince || null,
             birthCity: node.birthCity || null,

@@ -61,12 +61,12 @@ class Defunction extends Component {
                             {!this.props.alive ? (
                                 <React.Fragment>
                                     <Input type="number" min="1" max="31" id="defunction-=day" placeholder="day" onBlur={(event) => this.updateDefunctionDate(event, "day")}
-                                           defaultValue={this.props.getSavedInfo("defunction-day")} invalid={this.state.warnings.defunctionDay} />
+                                           defaultValue={this.props.getNodeInfo("defunctionDay")} invalid={this.state.warnings.defunctionDay} />
 
                                     <Input type="number" min="1" max="12" id="defunction-month" placeholder="month" onBlur={(event) => this.updateDefunctionDate(event, "month")}
-                                           defaultValue={this.props.getSavedInfo("defunction-month")} invalid={this.state.warnings.defunctionMonth} />
+                                           defaultValue={this.props.getNodeInfo("defunctionMonth")} invalid={this.state.warnings.defunctionMonth} />
                                            
-                                    <Input type="number" id="defunction-year" placeholder="Year" max={this.currentYear} defaultValue={this.props.getSavedInfo("defunction-year")}
+                                    <Input type="number" id="defunction-year" placeholder="Year" max={this.currentYear} defaultValue={this.props.getNodeInfo("defunctionYear")}
                                            onBlur={(event) => this.updateDefunctionDate(event, "year")} invalid={this.state.warnings.defunctionYear}/>
                                 </React.Fragment>
                             ) : null}

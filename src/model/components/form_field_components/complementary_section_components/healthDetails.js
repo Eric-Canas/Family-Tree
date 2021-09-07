@@ -8,10 +8,11 @@ class HealthDetails extends Component {
     render() {
         return (<React.Fragment>
                     <Col md="12">
-                        <TagsSelector label="Known Diseases" options={DISEASES_LIST} saveDefinedTags={(tagsList) => this.props.saveInfo("knownDiseases", tagsList)}/>
+                        <TagsSelector label="Known Diseases" options={DISEASES_LIST} saveDefinedTags={(tagsList) => this.props.saveInfo("knownDiseases", tagsList)}
+                                        initialState={this.props.getNodeInfo("knownDiseases")}/>
                         <Label for="health-details">Other Details</Label>
                         <Input type="textarea" id="health-details" rows="2" placeholder="Other Health Details" 
-                                onBlur={(event) => this.props.saveInfo("healthDetails", event.target.value)}/>
+                                onBlur={(event) => this.props.saveInfo("healthDetails", event.target.value)} defaultValue={this.props.getNodeInfo("healthDetails")}/>
                     </Col>
                 </React.Fragment>
                 )

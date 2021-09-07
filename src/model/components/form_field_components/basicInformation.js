@@ -7,7 +7,7 @@ class BasicInformation extends Component {
     constructor(props){
         super(props);
         this.state = {warnings : {bornDay : false, bornMonth : false, bornYear : false}}
-        this.possibleSurnames = ["Caca1", "Caca2"]//TODO: Update it with Family Tree information
+        this.possibleSurnames = ["Pipi", "Popo"]//TODO: Update it with Family Tree information
         this.nextYear = new Date().getFullYear()+1;
     }
 
@@ -61,18 +61,19 @@ class BasicInformation extends Component {
         return (<React.Fragment>
                     <Col md="12">
                         <Label for="name" className="form-label">Name</Label>
-                        <Input type="text" id="name" placeholder="Name" onBlur={(event) => this.updateName(event)} />
+                        <Input type="text" id="name" placeholder="Name" onBlur={(event) => this.updateName(event)} defaultValue={this.props.getNodeInfo("name")}/>
                     </Col>
                     <Col md="12">
-                        <TagsSelector label="Surname" options={this.possibleSurnames} saveDefinedTags={(tagsList) => this.props.saveInfo("surnames", tagsList)} canRepeat={true}/>
+                        <TagsSelector label="Surname" options={this.possibleSurnames} saveDefinedTags={(tagsList) => this.props.saveInfo("surnames", tagsList)} canRepeat={true}
+                                      initialState={this.props.getNodeInfo("surnames")}/>
                     </Col>
                     <Col md="12">
                         <Label htmlFor="born" className="form-label">Born at</Label>
                         <FormGroup>
                         <InputGroup>
-                            <Input type="number" min="1" max="31" id="born-day" placeholder="day" onBlur={(event) => this.updateBornDate(event, "day")} invalid={this.state.warnings.bornDay}/>
-                            <Input type="number" min="1" max="12" id="born-month" placeholder="month" onBlur={(event) => this.updateBornDate(event, "month")} invalid={this.state.warnings.bornMonth}/>
-                            <Input type="number" id="born-year" placeholder="Year" max={this.nextYear} onBlur={(event) => this.updateBornDate(event, "year")} invalid={this.state.warnings.bornYear}/>
+                            <Input type="number" min="1" max="31" id="born-day" placeholder="day" onBlur={(event) => this.updateBornDate(event, "day")} defaultValue={this.props.getNodeInfo("bornDay")} invalid={this.state.warnings.bornDay}/>
+                            <Input type="number" min="1" max="12" id="born-month" placeholder="month" onBlur={(event) => this.updateBornDate(event, "month")} defaultValue={this.props.getNodeInfo("bornMonth")} invalid={this.state.warnings.bornMonth}/>
+                            <Input type="number" id="born-year" placeholder="Year" max={this.nextYear} onBlur={(event) => this.updateBornDate(event, "year")} defaultValue={this.props.getNodeInfo("bornYear")} invalid={this.state.warnings.bornYear}/>
                         </InputGroup>
                         <FormText>You can let in blank any unknown data.</FormText>
                         </FormGroup>

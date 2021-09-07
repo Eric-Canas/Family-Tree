@@ -33,7 +33,7 @@ class CountryInput extends Component {
                         </InputGroupAddon>
                         <Input type="search" className="form-control" list={stringToID(this.props.label)+"-country-options"} id={stringToID(this.props.label)} placeholder={this.props.label}
                             onBlur={(event) => this.onSelectedCountry(event)} onKeyDown={(event) => {if (event.key === "Unidentified") this.includeNext = true;}}
-                            onInput={(event) => {if(this.includeNext){ this.onSelectedCountry(event); this.includeNext = false;}}}/>
+                            onInput={(event) => {if(this.includeNext){ this.onSelectedCountry(event); this.includeNext = false;}}} defaultValue={this.props.defaultValue}/>
                         <datalist id={stringToID(this.props.label)+"-country-options"}>
                             {COUNTRIES_NAMES.map(country => <option key={country}>{country}</option>)}
                         </datalist>

@@ -7,7 +7,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons'
 class TagsSelector extends Component {
     constructor(props) {
         super(props);
-        this.state = { currentTags: [] };
+        this.state = { currentTags: this.props.initialState? this.props.initialState : [] };
         this.onDefineTag = this.onDefineTag.bind(this);
         this.includeNext = false;
     }

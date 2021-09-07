@@ -11,7 +11,7 @@ import ComplementaryInfoNavBar from './form_field_components/complementaryInfoNa
 class IndividualForm extends Component {
     constructor(props) {
         super(props);
-        this.state = {alive: true};
+        this.state = {alive: this.props.getNodeInfo("alive") !== ""? this.props.getNodeInfo("alive") : true};
         this.setAlive = (alive) => this.setState({alive : alive});
     }
 
@@ -21,21 +21,21 @@ class IndividualForm extends Component {
             <Form className="row individual-form">
                 <Row>
                     <Col md="auto">
-                        <AvatarPicture saveInfo={this.props.updateNode}/>
+                        <AvatarPicture saveInfo={this.props.updateNode} currentImage={this.props.getNodeInfo("avatar")}/>
                     </Col>
                     <Col md="6" lg="7" xl="8" xxl="10" className="left-of-picture">
-                        <BasicInformation saveInfo={this.props.updateNode}/>
+                        <BasicInformation saveInfo={this.props.updateNode} getNodeInfo={this.props.getNodeInfo}/>
                     </Col>
                 </Row>
 
                 <Row>
-                    <Defunction alive={this.state.alive} setAlive={this.setAlive.bind(this)} saveInfo={this.props.updateNode} getSavedInfo={this.props.getNodeInfo}/>
+                    <Defunction alive={this.state.alive} setAlive={this.setAlive.bind(this)} saveInfo={this.props.updateNode} getNodeInfo={this.props.getNodeInfo}/>
                     <Col md="auto" sm={this.state.alive? "auto" : "12"}>
-                        <GenderSelector saveInfo={this.props.updateNode}/>
+                        <GenderSelector saveInfo={this.props.updateNode} getNodeInfo={this.props.getNodeInfo}/>
                     </Col>
                 </Row>
 
-                <ComplementaryInfoNavBar alive={this.state.alive} saveInfo={this.props.updateNode}/>
+                <ComplementaryInfoNavBar alive={this.state.alive} saveInfo={this.props.updateNode} getNodeInfo={this.props.getNodeInfo}/>
 
                 <div className="col-12">
                     <div className="form-check">

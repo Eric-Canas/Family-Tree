@@ -9,7 +9,7 @@ class AvatarPicture extends Component {
     constructor(props) {
         super(props);
         this.lastChargedImage = null;
-        this.currentImg = DEFAULT_AVATAR;
+        this.currentImg = this.props.currentImage? this.props.currentImage : DEFAULT_AVATAR;
         this.state = { showModal: false, src: this.lastChargedImage };
         this.showHideForm = () => this.setState({ showModal: !this.state.showModal, src: this.lastChargedImage });
         /* Maybe the currentImg must be converted to data now it is a local blob-like url (very short) */

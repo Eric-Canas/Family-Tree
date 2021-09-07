@@ -17,7 +17,7 @@ class ProvinceInput extends Component {
             <React.Fragment>
                     <Label for={stringToID(this.props.label)} className="form-label">{this.props.label}</Label>
                     <Input type="search" className="form-control" list={stringToID(this.props.label)+"-province-options"} id={stringToID(this.props.label)} placeholder={this.props.label}
-                        onBlur={(event) => this.onSelectedProvince(event)} />
+                        onBlur={(event) => this.onSelectedProvince(event)} defaultValue={this.props.defaultValue}/>
                     <datalist id={stringToID(this.props.label)+"-province-options"}>
                         {this.props.availableProvices.map(province => <option key={province}>{province}</option>)}
                     </datalist>

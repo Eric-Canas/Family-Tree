@@ -6,7 +6,7 @@ import { faGenderless, faMars, faVenus, faQuestion, faNeuter, faUser, faTransgen
 class GenderSelector extends Component {
     constructor(props){
         super(props);
-        this.state = {selectedGender : "Not tell"};
+        this.state = {selectedGender : this.props.getNodeInfo("gender") || "Not tell"};
         this.genderIcon = {"Not tell": faQuestion, "Female": faVenus, "Male" : faMars, "Non-Binary": faNeuter, "Transgender" : faTransgenderAlt, "Genderless" : faGenderless, "Other" : faUser}
     }
 
@@ -21,14 +21,8 @@ class GenderSelector extends Component {
                 <InputGroupAddon addonType="prepend">
                     <InputGroupText> <FontAwesomeIcon icon={this.genderIcon[this.state.selectedGender]} className="input-icon" /> </InputGroupText>
                 </InputGroupAddon>
-                <select className="form-select" id="gender" defaultValue="Not tell" onChange={(event) => this.onSelectGender(event)}>
-                    <option>Not tell</option>
-                    <option>Female</option>
-                    <option>Male</option>
-                    <option>Non-Binary</option>
-                    <option>Transgender</option>
-                    <option>Genderless</option>
-                    <option>Other</option>
+                <select className="form-select" id="gender" defaultValue={this.state.selectedGender} onChange={(event) => this.onSelectGender(event)}>
+                    {Object.keys(this.genderIcon).map( gender => <option key={gender}>{gender}</option>)}
                 </select>
             </InputGroup>
         </div>)

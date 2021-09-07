@@ -7,6 +7,7 @@ class AddIndependentNodeButton extends Component {
         super(props);
         this.state = {showModal: false};
         this.showHideForm = () => this.setState({showModal: !this.state.showModal});
+        this.node = {}
     }
 
     render() {
@@ -14,7 +15,7 @@ class AddIndependentNodeButton extends Component {
                     <Button type="button" color="primary" aria-label="Adds an Independent Node"
                             onClick={this.showHideForm}>{this.props.text || "Independent Node"}</Button>
 
-                    <ModalForm modal={this.state.showModal} close={this.showHideForm} save={this.props.save} header={this.props.text || "Independent Individual"}/>
+                    <ModalForm modal={this.state.showModal} close={this.showHideForm} relationship={"Independent"} save={this.props.save} node={this.node} header={this.props.text || "Independent Individual"}/>
                 </React.Fragment>
                 )
     }
