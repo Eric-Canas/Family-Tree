@@ -1,5 +1,7 @@
 .add-node-button {
     margin: 0 auto;
+    border-radius: 5px;
+    box-shadow: 0px 1px 3px gray;
 }
 
 .individual-form {
@@ -56,13 +58,15 @@ $imgWidth: 215px;
 
 .add-node-tooltip{
     .tooltip-inner{
-        background-color: #000000dd;
+        background-color: transparent;
         max-width: 100%;
     }
 }
 
 #family-tree-container {
-    .tree-node {
+    .tree-node-container {
+        display: block;
+        position: absolute;
         .country-flag{
             max-height: 20px; 
         }

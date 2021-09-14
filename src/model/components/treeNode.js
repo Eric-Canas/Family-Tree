@@ -3,6 +3,7 @@ import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle,  Row, Col, 
 import { DEFAULT_AVATAR } from '../constants';
 import AddNodeButton from './addNodeButton';
 import ModalForm from './modalForm';
+const PAD = 75;
 
 
 //TODO: Start to subtract information depending on the name of siblings
@@ -16,9 +17,24 @@ class TreeNode extends Component {
         this.updateNode = (newProperties) => this.props.update(this.props.node.id, newProperties);
     }
 
+    adjustViewIfNeeded(event){
+        
+        const boundingBox = event.currentTarget.getBoundingClientRect();
+        const isVisible = {x : (boundingBox.x+boundingBox.width) <  window.innerWidth && boundingBox.x >= 0, y : (boundingBox.y+boundingBox.height) <  window.innerHeight && boundingBox.y >= 0}
+        console.log(event.currentTarget.getBoundingClientRect())
+        if (!isVisible.x || !isVisible.y){
+            const x = boundingBox.x < 0? document.documentElement.scrollLeft+(boundingBox.x)-PAD :
+                                         document.documentElement.scrollLeft - window.innerWidth + (boundingBox.x + boundingBox.width)+ PAD;
+            const y = boundingBox.y < 0? document.documentElement.scrollTop+(boundingBox.y)-PAD :
+                                         document.documentElement.scrollTop - window.innerHeight + (boundingBox.y + boundingBox.height)+ PAD
+                                         
+            window.scrollTo(x, y);
+        }
+    }
+
     render() {
         return (
-            <Card className="tree-node" key={'card-' + this.props.node.id} id={'card-' + this.props.node.id} tabIndex={0}>
+            <Card className="tree-node" key={'card-' + this.props.node.id} id={'card-' + this.props.node.id} tabIndex={0} onClick={(event) => this.adjustViewIfNeeded(event)}>
                 <Row key={'card-row-' + this.props.node.id}>
                     <Col key={'card-avatar-col-' + this.props.node.id} md={4} className="my-auto p-2">
                         <CardImg key={'card-avatar-' + this.props.node.id} src={this.props.node.properties.avatar} className="card-avatar"

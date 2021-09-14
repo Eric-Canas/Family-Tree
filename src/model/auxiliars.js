@@ -8,7 +8,9 @@ function stringToID(string){
 export {stringToID};
 
 function stringToTittleCase(string){
-    return string.replace(/\b[a-z]/g, (x) => x.toUpperCase());
+    string = string.trim();
+    if (string !== "") string = string.split(" ").map(word => word[0].toUpperCase()+word.slice(1)).join(" ");
+    return string;
 }
 
 export {stringToTittleCase};
