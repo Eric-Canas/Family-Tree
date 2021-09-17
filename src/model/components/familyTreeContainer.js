@@ -6,6 +6,7 @@ import { Container } from 'reactstrap';
 
 const WIDTH = 0;
 const HEIGHT = 1;
+export {WIDTH, HEIGHT};
 
 class FamilyTreeContainer extends Component {
     constructor(props) {

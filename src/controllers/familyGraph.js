@@ -1,10 +1,12 @@
 import IndividualNode from "./individualNode";
 import { DiGraph} from "jsnetworkx";
-import {getPositions} from './graphUtils'
+import {getPositions, DEFAULT_SIZE} from './graphUtils';
+import {WIDTH, HEIGHT} from '../model/components/familyTreeContainer';
 
 const MAX_ID = 10000;
 const ID = 0;
 const RELATIONSHIP = 1;
+
 class FamilyGraph{
     constructor(){
         //TODO Convert it to an object -> {} where ids are the keys, for faster management ({data : node} could be use in the graph. Just check which is a better option)
@@ -44,9 +46,14 @@ class FamilyGraph{
     getNodesWithPosition(){
         const positions = getPositions(this.graph);
         const xOffset = -Math.min(...Object.values(positions).map(position => position.x));
+        const yOffset = -Math.min(...Object.values(positions).filter(position => position.id != -1).map(position => position.y));
         let output = [];
-        for (const [id, dataPosition] of Object.entries(positions)){
-            output.push({x : xOffset + dataPosition.x, y : dataPosition.y, size:dataPosition.size, node : this.nodes[id]});
+        for (const dataPosition of Object.values(positions)){
+            const id = dataPosition.id;
+            if (id in this.nodes){
+                output.push({x : xOffset + dataPosition.x, y : yOffset + dataPosition.y,
+                            size: DEFAULT_SIZE, node : this.nodes[id]});
+            }
         }
         console.log("OUTPUT POSITIONS", output);
         return output;
