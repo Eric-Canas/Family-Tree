@@ -44,7 +44,7 @@ class FamilyGraph{
     }
 
     getNodesWithPosition(){
-        const positions = getPositions(this.graph);
+        const positions = getPositions(this.graph, this.nodes);
         const xOffset = -Math.min(...Object.values(positions).map(position => position.x));
         const yOffset = -Math.min(...Object.values(positions).filter(position => position.id != -1).map(position => position.y));
         let output = [];
