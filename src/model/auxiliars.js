@@ -23,6 +23,37 @@ function capitalize(string){
 }
 export {capitalize}
 
+async function downloadFile (dataAsJSON, fileName="MyFamilyTree") {
+    const json = JSON.stringify(dataAsJSON);
+    const blob = new Blob([json],{type:'application/json'});
+    const href = await URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = fileName + ".json";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+export{downloadFile};
+
+async function uploadTree () {
+    const uploader = document.createElement('input');
+    uploader.type = 'file';
+    uploader.hidden = true;
+    uploader.accept = "application/JSON";
+    let jsonPromise = new Promise((resolve, reject) => {
+        uploader.onchange = (event) => {  console.log(event.target.files[0]);
+            const reader = new FileReader();
+            reader.onload = () => resolve(JSON.parse(reader.result));
+            reader.onabort = () => reject("File Reader aborted");
+            reader.readAsText(event.target.files[0]);
+            };
+    });
+    uploader.click();
+    return jsonPromise;
+}
+export{uploadTree};
+
 function getRandomNumber(range=1000000){
     return ~~(Math.random()*range)
 }

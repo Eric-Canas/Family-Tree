@@ -12,6 +12,30 @@
     }
 }
 
+.plant-tree-container{
+    min-height: calc(100vh - 1.1rem - 40px);
+    position: absolute;
+    min-width: 100%;
+    top: calc(1.1rem + 40px);
+    left: 0;
+    .plant-a-tree-button{
+        position: relative;
+        width: 30%;
+        height: 60px;
+        top: calc(50vh - 1.1rem - 40px);
+        left: calc(50% - 15%);
+        font-size: 18px;
+    }
+}
+
+.options-background{
+    position: relative;
+    min-height: calc(100vh - 1.1rem - 40px);
+    top: calc(1.1rem + 40px);
+    //background-color: rgba(0, 0, 0, 0.9);
+    background: linear-gradient(0deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.9) 100%);
+}
+
 .form-label {
     margin-top: 5px;
     margin-bottom: 5px;
@@ -19,6 +43,15 @@
 
 .complementary-info-nav {
     margin-bottom: 10px;
+}
+
+$primary-color: #0d6efd;
+
+.main-menu{
+    position: fixed;
+    z-index: 10;
+    width: 100%;
+    background-color:#fdfdfdf3 ;
 }
 
 $imgWidth: 215px;
@@ -64,6 +97,7 @@ $imgWidth: 215px;
 }
 
 #family-tree-container {
+    top: calc(1.1rem + 40px);
     .tree-node-container {
         display: block;
         position: absolute;
@@ -93,6 +127,16 @@ $imgWidth: 215px;
     }
 }
 
+@media (max-width: 576px) {
+    .plant-tree-container{
+        .plant-a-tree-button{
+            width: 50%;
+            height: 60px;
+            top: calc(50% - 15px);
+            left: calc(50% - 25%);
+        }
+    }
+}
 
 @media (max-width: 768px) {
     .individual-form {
@@ -118,6 +162,8 @@ $imgWidth: 215px;
                 }
         }
     }
-
-
+    .options-background{
+        min-height: calc(100vh - 1rem - 40px);
+        top: calc(1rem + 40px);
+    }
 }

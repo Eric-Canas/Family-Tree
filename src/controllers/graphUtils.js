@@ -24,8 +24,8 @@ function toStructuredArray(graph, nodes = {}) {
     for (const [v, w, attributes] of toEdgelist(graph)) {
         const relationship = attributes.relationship;
         //TODO: ORDER THE CHILDREN BEFORE DFS
-        if (!(v in array)) array[v] = { id: v, name: v in nodes? nodes[v].name : null, children: [], parents: [], couples: [], coupleOf : null, siblings: [], level: null };
-        if (!(w in array)) array[w] = { id: w, name: w in nodes? nodes[w].name : null, children: [], parents: [], couples: [], coupleOf: null, siblings: [], level: null };
+        if (!(v in array)) array[v] = { id: v, name: v in nodes? nodes[v].properties.name : null, children: [], parents: [], couples: [], coupleOf : null, siblings: [], level: null };
+        if (!(w in array)) array[w] = { id: w, name: w in nodes? nodes[w].properties.name : null, children: [], parents: [], couples: [], coupleOf: null, siblings: [], level: null };
         if (relationship === "child") {
             array[v].children.push(w);
             array[w].parents.push(v);
@@ -72,8 +72,36 @@ function toStructuredArray(graph, nodes = {}) {
 }
 
 function fillLevels(array, rootID, currentLevel) {
+    //debugger;
     if (array[rootID].level === null) {
         array[rootID].level = currentLevel;
+        //If i'm orphan and don't have couple or if I have a couple but we both are orphans
+        if (array[rootID].parents.length === 0 &&
+            (((array[rootID].couples.length === 0 && array[rootID].coupleOf === null) || (array[rootID].couples.length > 0 && array[array[rootID].couples[0]].parents.length === 0)) ||
+            (array[rootID].coupleOf !== null && array[array[rootID].coupleOf].parents.length === 0))) {
+             if (currentLevel === 0) {
+                 if (!array[-1].children.includes(rootID)) {
+                     array[-1].children.push(rootID);
+                     array[rootID].parents.push(-1);
+                 }
+                 // If it is already a child by some reason, do nothing
+                 //TODO: refactor this in a future
+             } else {
+                 const rootParentID = newNegativeID(array);
+                 array[rootParentID] = { id: rootParentID, name: "pseudoParent-"+array[rootID].name, children: [rootID], parents: [], couples: [],
+                                         coupleOf: null,  siblings: [], level: null };
+                 array[rootID].parents.push(rootParentID);
+                 fillLevels(array, rootParentID, currentLevel - 1);
+                 if (array[rootID].couples.length > 0) {
+                     const coupleID = array[rootID].couples[0];
+                     const coupleParentID = newNegativeID(array);
+                     array[coupleParentID] = { id: coupleParentID, name: "pseudoParent-"+array[rootID].name, children: [coupleID], parents: [], couples: [],
+                                               coupleOf: null, siblings: [], level: null };
+                     array[coupleID].parents.push(coupleParentID);
+                     fillLevels(array, coupleParentID, currentLevel - 1);
+                 }
+             }
+         }
         for (const coupleID of array[rootID].couples) {
             fillLevels(array, coupleID, currentLevel);
         }
@@ -81,36 +109,10 @@ function fillLevels(array, rootID, currentLevel) {
             fillLevels(array, childID, currentLevel + 1);
         }
 
-        for (const childID of array[rootID].parents){
-            fillLevels(array, childID, currentLevel - 1);
+        for (const parentID of array[rootID].parents){
+            fillLevels(array, parentID, currentLevel - 1);
         }
-        //If i'm orphan and don't have couple or if I have a couple but we both are orphans
-        if (array[rootID].parents.length === 0 &&
-           (((array[rootID].couples.length === 0 && array[rootID].coupleOf === null) || (array[rootID].couples.length > 0 && array[array[rootID].couples[0]].parents.length === 0)) ||
-           (array[rootID].coupleOf !== null && array[array[rootID].coupleOf].parents.length === 0))) {
-            if (currentLevel === 0) {
-                if (!array[-1].children.includes(rootID)) {
-                    array[-1].children.push(rootID);
-                    array[rootID].parents.push(-1);
-                }
-                // If it is already a child by some reason, do nothing
-                //TODO: refactor this in a future
-            } else {
-                const rootParentID = newNegativeID(array);
-                array[rootParentID] = { id: rootParentID, name: "pseudoParent-"+array[rootID].name, children: [rootID], parents: [], couples: [],
-                                        coupleOf: null,  siblings: [], level: null };
-                array[rootID].parents.push(rootParentID);
-                fillLevels(array, rootParentID, currentLevel - 1);
-                if (array[rootID].couples.length > 0) {
-                    const coupleID = array[rootID].couples[0];
-                    const coupleParentID = newNegativeID(array);
-                    array[coupleParentID] = { id: coupleParentID, name: "pseudoParent-"+array[rootID].name, children: [coupleID], parents: [], couples: [],
-                                              coupleOf: null, siblings: [], level: null };
-                    array[coupleID].parents.push(coupleParentID);
-                    fillLevels(array, coupleParentID, currentLevel - 1);
-                }
-            }
-        }
+        
     }
 }
 
@@ -124,7 +126,6 @@ function getPositions(graph, nodes = {}) {
     console.log("STRUCTURED ARRAY", structuredArray)
     let outputPositions = {}
     if (Object.keys(structuredArray).length > 0) {
-        //debugger;
         const root = buildDFSStructure(structuredArray, -1, {});
         console.log("DFS STRUCTURE", root);
         for (const id of graph.nodes()) {

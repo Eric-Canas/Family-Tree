@@ -14,7 +14,7 @@ class TreeNode extends Component {
         this.showForm = (relation) => this.setState({showModal : true, relation : relation});
         this.hideForm = () => this.setState({showModal : false, relation : null});
         this.nodeCopy = {...this.props.node.properties};
-        this.updateNode = (newProperties) => this.props.update(this.props.node.id, newProperties);
+        this.updateNode = (newProperties) => {this.props.update(this.props.node.id, newProperties); console.log("NODE UPDATED WITH NEW PROPERTIES", newProperties)}
     }
 
     adjustViewIfNeeded(event){

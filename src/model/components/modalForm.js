@@ -11,7 +11,7 @@ class ModalForm extends Component {
     }
 
     saveNode(){
-        console.log("SAVE NODE FROM MODAL FORM", this.node)
+        console.log("SAVE NODE FROM MODAL FORM", this.props.node)
         if (this.props.relationship===null){
             this.props.update(this.props.node);
         } else {

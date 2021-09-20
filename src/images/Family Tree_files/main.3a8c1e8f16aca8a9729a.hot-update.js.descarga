@@ -1,0 +1,219 @@
+webpackHotUpdate("main",{
+
+/***/ "./src/model/components/familyTreeContainer.js":
+/*!*****************************************************!*\
+  !*** ./src/model/components/familyTreeContainer.js ***!
+  \*****************************************************/
+/*! exports provided: WIDTH, HEIGHT, default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(__react_refresh_utils__, __react_refresh_error_overlay__) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WIDTH", function() { return WIDTH; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HEIGHT", function() { return HEIGHT; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _controllers_familyGraph__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../controllers/familyGraph */ "./src/controllers/familyGraph.js");
+/* harmony import */ var _treeNode__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./treeNode */ "./src/model/components/treeNode.js");
+/* harmony import */ var _addIndependentNodeButton__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./addIndependentNodeButton */ "./src/model/components/addIndependentNodeButton.js");
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/es/index.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__);
+__webpack_require__.$Refresh$.runtime = __webpack_require__(/*! ./node_modules/react-refresh/runtime.js */ "./node_modules/react-refresh/runtime.js");
+__webpack_require__.$Refresh$.setup(module.i);
+
+var _jsxFileName = "G:\\Code\\family-tree\\src\\model\\components\\familyTreeContainer.js";
+
+
+
+
+
+
+const WIDTH = 0;
+const HEIGHT = 1;
+
+
+class FamilyTreeContainer extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  constructor(props) {
+    super(props);
+    this.familyGraph = new _controllers_familyGraph__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    this.state = {
+      graph: this.familyGraph
+    };
+    this.saveNode = this.saveNode.bind(this);
+    this.updateNode = this.updateNode.bind(this);
+  }
+
+  saveNode(node) {
+    this.familyGraph.addNode(node);
+    this.setState({
+      graph: this.familyGraph
+    });
+  }
+
+  updateNode(id, newProperties) {
+    for (let i = 0; i < this.familyGraph.nodes.length; i++) {
+      if (this.familyGraph.nodes[i].id === id) {
+        this.familyGraph.nodes[i].properties = newProperties;
+        this.setState({
+          graph: this.familyGraph
+        });
+        break;
+      }
+    }
+  }
+
+  deleteNode(nodeID) {
+    this.familyGraph.deleteNodeByID(nodeID);
+    this.setState({
+      graph: this.familyGraph
+    });
+  }
+
+  render() {
+    //TODO: Scroll to center node position on click
+    return /*#__PURE__*/Object(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__["jsxDEV"])("section", {
+      id: "family-tree-container",
+      children: [this.state.graph.getNodesWithPosition().map(nodeInfo => /*#__PURE__*/Object(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__["jsxDEV"])(reactstrap__WEBPACK_IMPORTED_MODULE_4__["Container"], {
+        className: "tree-node-container",
+        style: {
+          top: nodeInfo.y,
+          left: nodeInfo.x,
+          width: nodeInfo.size[WIDTH],
+          height: nodeInfo.size[HEIGHT]
+        },
+        children: /*#__PURE__*/Object(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__["jsxDEV"])(_treeNode__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          node: nodeInfo.node,
+          delete: this.deleteNode.bind(this, nodeInfo.node.id),
+          save: this.saveNode,
+          update: this.updateNode
+        }, 'tree-node-' + nodeInfo.node.id, false, {
+          fileName: _jsxFileName,
+          lineNumber: 46,
+          columnNumber: 21
+        }, this)
+      }, 'tree-node-container' + nodeInfo.node.id, false, {
+        fileName: _jsxFileName,
+        lineNumber: 44,
+        columnNumber: 17
+      }, this)), Object.keys(this.state.graph.nodes).length === 0 ? /*#__PURE__*/Object(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__["jsxDEV"])(reactstrap__WEBPACK_IMPORTED_MODULE_4__["Container"], {
+        className: "justify-content-center",
+        style: {
+          height: "90vh"
+        },
+        children: /*#__PURE__*/Object(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__["jsxDEV"])(reactstrap__WEBPACK_IMPORTED_MODULE_4__["Row"], {
+          children: /*#__PURE__*/Object(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__["jsxDEV"])(reactstrap__WEBPACK_IMPORTED_MODULE_4__["Col"], {
+            md: 4,
+            children: /*#__PURE__*/Object(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_5__["jsxDEV"])(_addIndependentNodeButton__WEBPACK_IMPORTED_MODULE_3__["default"], {
+              text: "Plant the tree",
+              save: this.saveNode
+            }, void 0, false, {
+              fileName: _jsxFileName,
+              lineNumber: 54,
+              columnNumber: 29
+            }, this)
+          }, void 0, false, {
+            fileName: _jsxFileName,
+            lineNumber: 53,
+            columnNumber: 25
+          }, this)
+        }, void 0, false, {
+          fileName: _jsxFileName,
+          lineNumber: 52,
+          columnNumber: 21
+        }, this)
+      }, void 0, false, {
+        fileName: _jsxFileName,
+        lineNumber: 51,
+        columnNumber: 21
+      }, this) : null]
+    }, void 0, true, {
+      fileName: _jsxFileName,
+      lineNumber: 42,
+      columnNumber: 17
+    }, this);
+  }
+
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (FamilyTreeContainer);
+
+const currentExports = __react_refresh_utils__.getModuleExports(module.i);
+__react_refresh_utils__.registerExportsForReactRefresh(currentExports, module.i);
+
+if (true) {
+  const isHotUpdate = !!module.hot.data;
+  const prevExports = isHotUpdate ? module.hot.data.prevExports : null;
+
+  if (__react_refresh_utils__.isReactRefreshBoundary(currentExports)) {
+    module.hot.dispose(
+      /**
+       * A callback to performs a full refresh if React has unrecoverable errors,
+       * and also caches the to-be-disposed module.
+       * @param {*} data A hot module data object from Webpack HMR.
+       * @returns {void}
+       */
+      function hotDisposeCallback(data) {
+        // We have to mutate the data object to get data registered and cached
+        data.prevExports = currentExports;
+      }
+    );
+    module.hot.accept(
+      /**
+       * An error handler to allow self-recovering behaviours.
+       * @param {Error} error An error occurred during evaluation of a module.
+       * @returns {void}
+       */
+      function hotErrorHandler(error) {
+        if (
+          typeof __react_refresh_error_overlay__ !== 'undefined' &&
+          __react_refresh_error_overlay__
+        ) {
+          __react_refresh_error_overlay__.handleRuntimeError(error);
+        }
+
+        if (typeof __react_refresh_test__ !== 'undefined' && __react_refresh_test__) {
+          if (window.onHotAcceptError) {
+            window.onHotAcceptError(error.message);
+          }
+        }
+
+        __webpack_require__.c[module.i].hot.accept(hotErrorHandler);
+      }
+    );
+
+    if (isHotUpdate) {
+      if (
+        __react_refresh_utils__.isReactRefreshBoundary(prevExports) &&
+        __react_refresh_utils__.shouldInvalidateReactRefreshBoundary(prevExports, currentExports)
+      ) {
+        module.hot.invalidate();
+      } else {
+        __react_refresh_utils__.enqueueUpdate(
+          /**
+           * A function to dismiss the error overlay after performing React refresh.
+           * @returns {void}
+           */
+          function updateCallback() {
+            if (
+              typeof __react_refresh_error_overlay__ !== 'undefined' &&
+              __react_refresh_error_overlay__
+            ) {
+              __react_refresh_error_overlay__.clearRuntimeErrors();
+            }
+          }
+        );
+      }
+    }
+  } else {
+    if (isHotUpdate && __react_refresh_utils__.isReactRefreshBoundary(prevExports)) {
+      module.hot.invalidate();
+    }
+  }
+}
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@pmmmwh/react-refresh-webpack-plugin/lib/runtime/RefreshUtils.js */ "./node_modules/@pmmmwh/react-refresh-webpack-plugin/lib/runtime/RefreshUtils.js"), __webpack_require__(/*! ./node_modules/react-dev-utils/refreshOverlayInterop.js */ "./node_modules/react-dev-utils/refreshOverlayInterop.js")))
+
+/***/ })
+
+})
+//# sourceMappingURL=main.3a8c1e8f16aca8a9729a.hot-update.js.map
