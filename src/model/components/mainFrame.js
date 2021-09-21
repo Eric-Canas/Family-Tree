@@ -4,8 +4,7 @@ import FamilyGraph from '../../controllers/familyGraph';
 import MainMenu from './mainMenu';
 import { Fade } from 'reactstrap';
 import { downloadFile, uploadTree } from '../auxiliars'
-
-const ADDITIONAL_OPTIONS = {"statistics" : <div/>}
+import StatisticsFrame from './statisticsFrame';
 
 //TODO: Start to subtract information depending on the name of siblings
 class MainFrame extends Component {
@@ -17,6 +16,8 @@ class MainFrame extends Component {
         this.updateState = () => this.setState({selectedOption: this.state.selectedOption, familyGraph : this.familyGraph})
         this.downloadTree = this.downloadTree.bind(this);
         this.uploadTree = this.uploadTree.bind(this);
+
+        this.ADDITIONAL_OPTIONS = {"statistics" : <StatisticsFrame/>}
     }
 
     downloadTree(){
@@ -33,16 +34,17 @@ class MainFrame extends Component {
     }
 
     render() {
-        const visible = this.state.selectedOption in ADDITIONAL_OPTIONS;
+        const visible = this.state.selectedOption in this.ADDITIONAL_OPTIONS;
         //TODO: Maybe the Family tree container should be deleted when fade is in, because could produce a undesired scroll below (but it would be preferred with a fade transition)
         return (
             <div>
-                <MainMenu selectOption={this.selectOption} additionalOptions={Object.keys(ADDITIONAL_OPTIONS)} className="main-menu"
-                          downloadFunction = {this.downloadTree} uploadFunction = {this.uploadTree}/>
+                <MainMenu selectOption={this.selectOption} additionalOptions={Object.keys(this.ADDITIONAL_OPTIONS)} className="main-menu"
+                          downloadFunction = {this.downloadTree} uploadFunction = {this.uploadTree} isEmpty={this.state.familyGraph.isEmpty()}/>
+
                 <FamilyTreeContainer familyGraph={this.state.familyGraph} visible={!visible} updateState={this.updateState}/>
                 
                 <Fade in={visible} className = "options-background" style={{zIndex : visible? 1 : -1}}>
-                    {visible? null : null}
+                    {visible? <StatisticsFrame graph={this.state.familyGraph}/> : null}
                 </Fade>
             </div>
         )

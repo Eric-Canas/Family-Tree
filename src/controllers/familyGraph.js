@@ -1,6 +1,6 @@
 import IndividualNode from "./individualNode";
 import { DiGraph, toEdgelist } from "jsnetworkx";
-import { getPositions, DEFAULT_SIZE } from './graphUtils';
+import { getPositions, DEFAULT_SIZE, sharingBloodlineNodes } from './graphUtils';
 import { WIDTH, HEIGHT } from '../model/components/familyTreeContainer';
 
 const MAX_ID = 10000;
@@ -21,6 +21,15 @@ class FamilyGraph {
                 this.graph.addEdge(v, w, attributes);
             }
         }
+    }
+
+    isEmpty(){
+        return Object.keys(this.nodes).length === 0;
+    }
+
+    getSharingBloodlineProperties(originID=0, property){
+        return sharingBloodlineNodes(this.graph, originID);
+        //TODO: GET THE PROPERTY
     }
 
     generateKey() {
@@ -64,7 +73,6 @@ class FamilyGraph {
                 });
             }
         }
-        console.log("OUTPUT POSITIONS", output);
         return output;
     }
 

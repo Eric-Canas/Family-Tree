@@ -1,6 +1,6 @@
 import { shortestPathLength, toEdgelist, edges, createEmptyCopy } from "jsnetworkx";
 import d3 from "d3"
-
+const EDGE_W = 1;
 const EDGE_ATTRIBUTES = 2;
 const SPACING = 20;
 const DEFAULT_SIZE = [500, 200]
@@ -16,7 +16,35 @@ function relationsSubgraph(graph, relationship, exclude = false) {
     }
     return subgraph;
 }
+
+function reverseGraph(graph, noReverseRelations = ['couple']) {
+    let subgraph = createEmptyCopy(graph);
+    for (const [v, w, properties] of toEdgelist(graph)) {
+        if (noReverseRelations.includes(properties.relationship)) subgraph.addEdge(v, w, properties);
+        else subgraph.addEdge(w, v, properties);
+    }
+    return subgraph;
+}
+
 export { relationsSubgraph };
+
+function sharingBloodlineNodes(graph, originID = 0){
+    const reversedGraph = reverseGraph(graph);
+    debugger;
+    // WARNING: Remember that this solution is for the case where parent is only one, and not its couple
+    const reversedEdges = toEdgelist(reversedGraph, [originID]).filter(edge => edge[EDGE_ATTRIBUTES].relationship === 'child');
+    if (reversedEdges.length > 1) throw new Error("Sharing Bloodlines found more than one parent? Did you set both parents in the graph?")
+    const unseenEdges = [reversedEdges[0][EDGE_W]];
+    const ancestors = new Set();
+    while(unseenEdges.length !== 0){
+        const currentNode = unseenEdges.pop();
+        if (ancestors.has(currentNode)) throw new Error("A node is being inspected twice when generating bloodLines?");
+        ancestors.add(currentNode);
+        unseenEdges.push(...toEdgelist(reversedGraph, [currentNode]).map(edge => edge[EDGE_W]));
+    }
+    console.log("All Ancestors", ancestors);
+}
+export {sharingBloodlineNodes};
 
 function toStructuredArray(graph, nodes = {}) {
     let array = {};

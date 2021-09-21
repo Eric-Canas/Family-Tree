@@ -18,34 +18,41 @@ class MainMenu extends Component {
                     <NavbarToggler onClick={this.toggleOpen} />
                     <Collapse isOpen={this.state.open} navbar>
                         <Nav tabs className="mr-auto" navbar>
+                        <UncontrolledDropdown nav inNavbar>
+                                <DropdownToggle nav caret>
+                                    File
+                                </DropdownToggle>
+                                <DropdownMenu right>
+                                    <DropdownItem onClick={this.props.uploadFunction}>
+                                        Open
+                                    </DropdownItem>
+                                    <DropdownItem divider />
+                                    <DropdownItem onClick={this.props.downloadFunction} disabled={this.props.isEmpty}>
+                                        Download
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </UncontrolledDropdown>
+
                             {this.props.additionalOptions.map(option => (<NavItem>
-                                                                            <NavLink key={stringToID(option)} onClick={() => {this.props.selectOption(option); this.close();}}>{stringToTittleCase(option)}</NavLink>
+                                                                            <NavLink key={stringToID(option)} onClick={() => {this.props.selectOption(option); this.close();}} disabled={this.props.isEmpty}>
+                                                                                {stringToTittleCase(option)}
+                                                                            </NavLink>
                                                                         </NavItem>))}
-                            <UncontrolledDropdown nav inNavbar>
+                                                                        <UncontrolledDropdown nav inNavbar>
                                 <DropdownToggle nav caret>
                                     View
                                 </DropdownToggle>
                                 <DropdownMenu right>
                                     <DropdownItem>
-                                        Show Shit
-                                    </DropdownItem>
-                                    <DropdownItem>
-                                        Show Shit2
+                                        Shit1
                                     </DropdownItem>
                                     <DropdownItem divider />
                                     <DropdownItem>
-                                        Advanced Settings
+                                        Shit2
                                     </DropdownItem>
                                 </DropdownMenu>
                             </UncontrolledDropdown>
-                            <NavItem>
-                                <NavLink onClick={this.props.downloadFunction}>Download</NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink onClick={this.props.uploadFunction}>Open</NavLink>
-                            </NavItem>
                         </Nav>
-                        <NavbarText>Navbar Text</NavbarText>
                     </Collapse>
                 </Navbar>
         )
