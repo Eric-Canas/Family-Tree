@@ -27,9 +27,13 @@ class FamilyGraph {
         return Object.keys(this.nodes).length === 0;
     }
 
-    getSharingBloodlineProperties(originID=0, property){
-        return sharingBloodlineNodes(this.graph, originID);
-        //TODO: GET THE PROPERTY
+    getSharingBloodlineProperties(property = null, originID=0){
+        const ancestors = sharingBloodlineNodes(this.graph, originID);
+        if (!property){
+            return ancestors.map(ancestor => this.nodes[ancestor].properties)
+        } else {
+            return ancestors.map(ancestor => this.nodes[ancestor].properties[property]).flat();
+        }
     }
 
     generateKey() {

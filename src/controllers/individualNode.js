@@ -20,7 +20,7 @@ class IndividualNode {
             defunctionDay: node.defunctionDay || null,
             defunctionMonth: node.defunctionMonth || null,
             defunctionYear: node.defunctionYear || null,
-            gender: node.gender || null,
+            gender: node.gender || "unknown",
             professions: node.professions || [],
             alias: node.alias || null,
             biography: node.biography || null,

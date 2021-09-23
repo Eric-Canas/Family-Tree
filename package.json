@@ -11,6 +11,7 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "chart.js": "^3.5.1",
+    "chartjs-plugin-datalabels": "^2.0.0",
     "d3": "^3.5.17",
     "jsnetworkx": "^0.3.4",
     "react": "^17.0.2",

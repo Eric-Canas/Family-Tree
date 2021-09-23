@@ -127,6 +127,34 @@ $imgWidth: 215px;
     }
 }
 
+
+.statistics-header{
+    color : #ddd;
+}
+.statistics-subtitle{
+    color : #ddd;
+}
+.progress-bar-definition{
+    padding-top: 1rem;
+}
+.no-detected-ancestors{
+    margin-top: 2rem;
+}
+
+$MALE_COLOR : #7ad8f5dd;
+$FEMALE_COLOR : #9d5783dd;
+.male{
+    .progress-bar{
+        background-color: $MALE_COLOR;
+    }
+}
+
+.female{
+    .progress-bar{
+        background-color: $FEMALE_COLOR;
+    }
+}
+
 @media (max-width: 576px) {
     .plant-tree-container{
         .plant-a-tree-button{

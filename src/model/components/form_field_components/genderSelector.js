@@ -6,8 +6,8 @@ import { faGenderless, faMars, faVenus, faQuestion, faNeuter, faUser, faTransgen
 class GenderSelector extends Component {
     constructor(props){
         super(props);
-        this.state = {selectedGender : this.props.getNodeInfo("gender") || "Not tell"};
-        this.genderIcon = {"Not tell": faQuestion, "Female": faVenus, "Male" : faMars, "Non-Binary": faNeuter, "Transgender" : faTransgenderAlt, "Genderless" : faGenderless, "Other" : faUser}
+        this.state = {selectedGender : this.props.getNodeInfo("gender") || "Unknown"};
+        this.genderIcon = {"Unknown": faQuestion, "Female": faVenus, "Male" : faMars, "Non-Binary": faNeuter, "Transgender" : faTransgenderAlt, "Genderless" : faGenderless, "Other" : faUser}
     }
 
     onSelectGender(event){

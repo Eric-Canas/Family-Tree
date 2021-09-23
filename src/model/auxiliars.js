@@ -1,5 +1,6 @@
 
 import { COUNTRIES, FLAGS_URL, FLAGS_FORMAT } from '../model/constants'
+import { GENERAL_COLORS } from './components/charts/constants';
 
 function stringToID(string){
     return string.trim().toLowerCase().replace(" ", "-").replace("/", "-");
@@ -19,9 +20,41 @@ function capitalize(string){
     string = string.trim();
     if (string !== "") string = string[0].toUpperCase()+string.slice(1);
     return string;
-
 }
 export {capitalize}
+
+function countFrequencies(array){
+    let frequenciesDict = {};
+    for (const element of array){
+        frequenciesDict[element] = element in frequenciesDict? frequenciesDict[element] + 1 :  1;
+    }
+    return frequenciesDict;
+}
+
+export {countFrequencies};
+
+
+function buildChartData(frequencies, title = "Title not set", colors = GENERAL_COLORS){
+    const data = {
+        labels: Object.keys(frequencies),
+        datasets: [{
+                label: title,
+                data: Object.values(frequencies),
+                backgroundColor: Object.entries(Object.keys(frequencies)).map((name, i) => colors(i, 0.75)),
+                borderColor: Object.entries(Object.keys(frequencies)).map((name, i) => colors(i, 1)),
+                borderWidth: 5,
+                datalabels: {
+                    font : { size : '20px'},
+                    color: '#ddd',
+                    formatter: (value, context) => context.chart.data.labels[context.dataIndex]
+                },
+                radius: '90%'
+            }
+        ],
+    };
+    return data;
+}
+export {buildChartData};
 
 async function downloadFile (dataAsJSON, fileName="MyFamilyTree") {
     const json = JSON.stringify(dataAsJSON);

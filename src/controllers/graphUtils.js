@@ -30,7 +30,6 @@ export { relationsSubgraph };
 
 function sharingBloodlineNodes(graph, originID = 0){
     const reversedGraph = reverseGraph(graph);
-    debugger;
     // WARNING: Remember that this solution is for the case where parent is only one, and not its couple
     const reversedEdges = toEdgelist(reversedGraph, [originID]).filter(edge => edge[EDGE_ATTRIBUTES].relationship === 'child');
     if (reversedEdges.length > 1) throw new Error("Sharing Bloodlines found more than one parent? Did you set both parents in the graph?")
@@ -42,7 +41,7 @@ function sharingBloodlineNodes(graph, originID = 0){
         ancestors.add(currentNode);
         unseenEdges.push(...toEdgelist(reversedGraph, [currentNode]).map(edge => edge[EDGE_W]));
     }
-    console.log("All Ancestors", ancestors);
+    return Array.from(ancestors);
 }
 export {sharingBloodlineNodes};
 

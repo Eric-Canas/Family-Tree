@@ -112,6 +112,30 @@
   max-height: 75vh;
 }
 
+.statistics-header {
+  color: #ddd;
+}
+
+.statistics-subtitle {
+  color: #ddd;
+}
+
+.progress-bar-definition {
+  padding-top: 1rem;
+}
+
+.no-detected-ancestors {
+  margin-top: 2rem;
+}
+
+.male .progress-bar {
+  background-color: #7ad8f5dd;
+}
+
+.female .progress-bar {
+  background-color: #9d5783dd;
+}
+
 @media (max-width: 576px) {
   .plant-tree-container .plant-a-tree-button {
     width: 50%;
