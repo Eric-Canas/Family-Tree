@@ -57,6 +57,10 @@ class IndividualNode {
         }
     }
 
+    getBirthDateAsDate(){
+        if (this.properties.bornYear) return new Date(this.properties.bornYear, (this.properties.bornMonth || 1) - 1, this.properties.bornDay || 1);
+        else return null;
+    }
     getDateAsString() {
         let dateString = "";
         let birthDateString = "";

@@ -33,8 +33,21 @@ function countFrequencies(array){
 
 export {countFrequencies};
 
+function getArgMaxKeyFromObject(obj){
+    let maxKey = null;
+    let maxValue = -Infinity;
+    for (const [key, value] of Object.entries(obj)){
+        if (maxValue < value){
+            maxValue = value;
+            maxKey = key;
+        }
+    }
+    return maxKey;
+}
 
-function buildChartData(frequencies, title = "Title not set", colors = GENERAL_COLORS){
+export {getArgMaxKeyFromObject};
+
+function buildChartData(frequencies, title = "Title not set", radius = '90%', colors = GENERAL_COLORS){
     const data = {
         labels: Object.keys(frequencies),
         datasets: [{
@@ -48,7 +61,7 @@ function buildChartData(frequencies, title = "Title not set", colors = GENERAL_C
                     color: '#ddd',
                     formatter: (value, context) => context.chart.data.labels[context.dataIndex]
                 },
-                radius: '90%'
+                radius: radius
             }
         ],
     };

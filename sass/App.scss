@@ -32,7 +32,6 @@
     position: relative;
     min-height: calc(100vh - 1.1rem - 40px);
     top: calc(1.1rem + 40px);
-    //background-color: rgba(0, 0, 0, 0.9);
     background: linear-gradient(0deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.9) 100%);
 }
 
@@ -131,14 +130,59 @@ $imgWidth: 215px;
 .statistics-header{
     color : #ddd;
 }
+
 .statistics-subtitle{
     color : #ddd;
+    margin-top: 1rem;
 }
+
+.geochart-container{
+    .detailed-geochart-info{
+        margin-top: 4rem;
+    }
+    div{
+        margin: 0 auto;
+        .geochart{
+            margin: 0 auto;
+        }
+    }
+}
+
 .progress-bar-definition{
     padding-top: 1rem;
 }
 .no-detected-ancestors{
     margin-top: 2rem;
+}
+
+.statistic-selector-header{
+    margin-top: 5vh;
+    text-align: center;
+    color: #ccc;
+    .individual-selector{
+        display: inline-block;
+        width: auto;
+        text-align: center;
+        background-color: #222;
+        color: white;
+        border-color: #111;
+        option{
+            text-align: center;
+            
+        }
+    }
+}
+
+.statistics-separator{
+    color: white;
+    border-color: white;
+    width: 95%;
+    margin: 2rem auto;
+    height: 5px !important;
+}
+
+.statistics-table{
+    --bs-table-bg: transparent;
 }
 
 $MALE_COLOR : #7ad8f5dd;

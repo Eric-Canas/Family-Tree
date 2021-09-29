@@ -10,7 +10,7 @@ class LocationDetails extends Component {
     constructor(props) {
         super(props);
         this.state = { currentKnownCountry: this.props.getNodeInfo(this.props.situation.toLowerCase()+'Country') in COUNTRIES? this.props.getNodeInfo(this.props.situation.toLowerCase()+'Country') : null}
-        this.currentCountryProvinces = () => this.state.currentKnownCountry !== null? COUNTRIES[this.state.currentKnownCountry].provinces : [];
+        this.currentCountryProvinces = () => this.state.currentKnownCountry !== null? Object.keys(COUNTRIES[this.state.currentKnownCountry].provinces) : [];
     }
 
     setCity(event){

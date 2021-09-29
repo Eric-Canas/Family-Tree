@@ -118,6 +118,17 @@
 
 .statistics-subtitle {
   color: #ddd;
+  margin-top: 1rem;
+}
+
+.geochart-container .detailed-geochart-info {
+  margin-top: 4rem;
+}
+.geochart-container div {
+  margin: 0 auto;
+}
+.geochart-container div .geochart {
+  margin: 0 auto;
 }
 
 .progress-bar-definition {
@@ -126,6 +137,35 @@
 
 .no-detected-ancestors {
   margin-top: 2rem;
+}
+
+.statistic-selector-header {
+  margin-top: 5vh;
+  text-align: center;
+  color: #ccc;
+}
+.statistic-selector-header .individual-selector {
+  display: inline-block;
+  width: auto;
+  text-align: center;
+  background-color: #222;
+  color: white;
+  border-color: #111;
+}
+.statistic-selector-header .individual-selector option {
+  text-align: center;
+}
+
+.statistics-separator {
+  color: white;
+  border-color: white;
+  width: 95%;
+  margin: 2rem auto;
+  height: 5px !important;
+}
+
+.statistics-table {
+  --bs-table-bg: transparent;
 }
 
 .male .progress-bar {

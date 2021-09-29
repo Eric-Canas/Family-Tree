@@ -18,45 +18,46 @@ class SharedTagsProgressBars extends Component {
         return genderFrequency;
     }
 
-    getSharedDiseasesWith(originID = 0) {
-        const originDiseases = this.props.graph.nodes[originID].properties[this.props.property];
+    getSharedTagsWith(originID = 0) {
+        const originTags = this.props.graph.nodes[originID].properties[this.props.property];
         const ancestors = this.props.graph.getSharingBloodlineProperties(null, originID);
-        let diseasesOccurrences = {};
+        let tagOccurrences = {};
         const unitFrequency = 1 / ancestors.length;
         const genderFrequencies = this.genderFrequenciesFromNodes(ancestors);
-        for (const disease of originDiseases) {
-            diseasesOccurrences[disease] = { frequency: { total: 0, byGender: {} }, ancestors: [], ancestorsByGender: {} }
+        for (const tag of originTags) {
+            tagOccurrences[tag] = { frequency: { total: 0, byGender: {} }, ancestors: [], ancestorsByGender: {} }
             for (const node of ancestors) {
-                if (node[this.props.property].includes(disease)) {
-                    diseasesOccurrences[disease].frequency.total += unitFrequency;
-                    diseasesOccurrences[disease].ancestors.push(node.name + ' ' + node.surnames.join(' '));
-                    if (node.gender in diseasesOccurrences[disease].ancestorsByGender) 
-                        diseasesOccurrences[disease].ancestorsByGender[node.gender].push(node.name + ' ' + node.surnames.join(' '));
+                if (node[this.props.property].includes(tag)) {
+                    tagOccurrences[tag].frequency.total += unitFrequency;
+                    tagOccurrences[tag].ancestors.push(node.name + ' ' + node.surnames.join(' '));
+                    if (node.gender in tagOccurrences[tag].ancestorsByGender) 
+                        tagOccurrences[tag].ancestorsByGender[node.gender].push(node.name + ' ' + node.surnames.join(' '));
                     else 
-                        diseasesOccurrences[disease].ancestorsByGender[node.gender] = [node.name + ' ' + node.surnames.join(' ')];
+                        tagOccurrences[tag].ancestorsByGender[node.gender] = [node.name + ' ' + node.surnames.join(' ')];
 
-                    diseasesOccurrences[disease].frequency.byGender[node.gender] = node.gender in diseasesOccurrences[disease].frequency.byGender ?
-                        diseasesOccurrences[disease].frequency.byGender[node.gender] + 1 / genderFrequencies[node.gender] :
+                    tagOccurrences[tag].frequency.byGender[node.gender] = node.gender in tagOccurrences[tag].frequency.byGender ?
+                        tagOccurrences[tag].frequency.byGender[node.gender] + 1 / genderFrequencies[node.gender] :
                         1 / genderFrequencies[node.gender];
                 }
             }
 
         }
 
-        const emergent = Object.entries(diseasesOccurrences).filter(([name, value]) => value.frequency.total === 0).map(([name, value]) => name);
-        const heritage = Object.entries(diseasesOccurrences).filter(([name, value]) => value.frequency.total > 0).map(([name, value]) => name);
+        const emergent = Object.entries(tagOccurrences).filter(([name, value]) => value.frequency.total === 0).map(([name, value]) => name);
+        const heritage = Object.entries(tagOccurrences).filter(([name, value]) => value.frequency.total > 0).map(([name, value]) => name);
 
-        return [diseasesOccurrences, emergent, heritage, ancestors.length, genderFrequencies];
+        return [tagOccurrences, emergent, heritage, ancestors.length, genderFrequencies];
     }
 
 
     render() {
-
-        const [diseasesOccurrences, emergent, heritage, ancestorsLength, genderFrequencies] = this.getSharedDiseasesWith(0);
+        const [tagOccurrences, emergent, heritage, ancestorsLength, genderFrequencies] = this.getSharedTagsWith(this.props.selectedNode);
         return (<React.Fragment>
-            {heritage.map(disease => <ProgressBar disease={disease} diseaseInfo={diseasesOccurrences[disease]}
+            {Object.keys(tagOccurrences).length === 0? <h5 className='statistics-subtitle'>
+                                                                {this.props.graph.nodes[this.props.selectedNode].properties.name} has not known {this.props.propertyToShow.toLowerCase()}
+                                                            </h5> : null}
+            {heritage.map(tag => <ProgressBar tag={tag} tagInfo={tagOccurrences[tag]}
                                                     ancestorsLength={ancestorsLength} genderFrequencies={genderFrequencies} />)}
-
             {emergent.length > 0 ? <h4 className="statistics-subtitle no-detected-ancestors">No ancestors with: {emergent.join(', ')}</h4> : null}
         </React.Fragment>)
     };
@@ -71,27 +72,27 @@ class ProgressBar extends Component {
     }
 
     render() {
-        const frequency = this.props.diseaseInfo.frequency.total;
+        const frequency = this.props.tagInfo.frequency.total;
 
-        return (<Row key={stringToID(this.props.disease) + '-row'}>
-            <Col md={3} key={stringToID(this.props.disease) + '-col-name'}>
-                <h5 className="statistics-subtitle progress-bar-definition" key={stringToID(this.props.disease) + '-name'}>{this.props.disease}</h5>
+        return (<Row key={stringToID(this.props.tag) + '-row'}>
+            <Col md={3} key={stringToID(this.props.tag) + '-col-name'}>
+                <h5 className="statistics-subtitle progress-bar-definition" key={stringToID(this.props.tag) + '-name'}>{this.props.tag}</h5>
             </Col>
-            <Col md={9} key={stringToID(this.props.disease) + '-col-progress'}>
-                <div key={stringToID(this.props.disease) + '-progress-bar-tooltip-div'} id={stringToID(this.props.disease) + '-progress-bar'}>
-                    <div className="text-center statistics-subtitle" key={stringToID(this.props.disease) + '-percentage'}>
+            <Col md={9} key={stringToID(this.props.tag) + '-col-progress'}>
+                <div key={stringToID(this.props.tag) + '-progress-bar-tooltip-div'} id={stringToID(this.props.tag) + '-progress-bar'}>
+                    <div className="text-center statistics-subtitle" key={stringToID(this.props.tag) + '-percentage'}>
                         {`${Math.round(frequency * this.props.ancestorsLength)}/${this.props.ancestorsLength} (${Math.round(frequency * 100)}%)`}
                 </div>
-                <Progress value={frequency * 100} key={stringToID(this.props.disease) + '-progress-bar'} />
+                <Progress value={frequency * 100} key={stringToID(this.props.tag) + '-progress-bar'} />
                 </div>
                 <Row>
-                <ProgressBarByGender diseaseInfo={this.props.diseaseInfo} disease={this.props.disease} genderFrequencies={this.props.genderFrequencies}/>
+                <ProgressBarByGender tagInfo={this.props.tagInfo} tag={this.props.tag} genderFrequencies={this.props.genderFrequencies}/>
             </Row>
                 
             </Col>
-            <UncontrolledTooltip key={stringToID(this.props.disease) + '-tooltip'} placement="bottom" isOpen={this.state.tooltipIsOpen}
-                                 target={stringToID(this.props.disease) + '-progress-bar'} toggle={this.toggleTooltip}>
-                {this.props.diseaseInfo.ancestors.map(ancestor => <p key={stringToID(this.props.disease) + '-progress-bar-' + stringToID(ancestor)}>
+            <UncontrolledTooltip key={stringToID(this.props.tag) + '-tooltip'} placement="bottom" isOpen={this.state.tooltipIsOpen}
+                                 target={stringToID(this.props.tag) + '-progress-bar'} toggle={this.toggleTooltip}>
+                {this.props.tagInfo.ancestors.map(ancestor => <p key={stringToID(this.props.tag) + '-progress-bar-' + stringToID(ancestor)}>
                                                                                                     {ancestor}
                                                                                                 </p>)}
             </UncontrolledTooltip>
@@ -112,24 +113,24 @@ class ProgressBarByGender extends Component {
     render() {
 
         return (<React.Fragment>
-                {Object.entries(this.props.diseaseInfo.frequency.byGender).map(([gender, genFreq]) =>
+                {Object.entries(this.props.tagInfo.frequency.byGender).map(([gender, genFreq]) =>
                     <React.Fragment>
-                            <Col sm = {2} md = {3} xl = {2} key = {stringToID(this.props.disease) + '-' + stringToID(gender)+'-col'}>
-                                <h5 className="statistics-subtitle progress-bar-definition" key={stringToID(this.props.disease) + '-' + stringToID(gender)}>{gender}</h5>
+                            <Col sm = {2} md = {3} xl = {2} key = {stringToID(this.props.tag) + '-' + stringToID(gender)+'-col'}>
+                                <h5 className="statistics-subtitle progress-bar-definition" key={stringToID(this.props.tag) + '-' + stringToID(gender)}>{gender}</h5>
                             </Col>
-                            <Col  sm = {Object.keys(this.props.diseaseInfo.frequency.byGender).length > 1? 4 :  10} 
-                                  md = {Object.keys(this.props.diseaseInfo.frequency.byGender).length > 1? 3 :  9} 
-                                  xl = {Object.keys(this.props.diseaseInfo.frequency.byGender).length > 1? 4 :  10}
-                                  id = {stringToID(this.props.disease) + '-' + stringToID(gender) + '-tooltip-div'}
-                                  key = {stringToID(this.props.disease) + '-' + stringToID(gender) + '-tooltip-div'}>
-                            <div className="text-center statistics-subtitle" key={stringToID(this.props.disease) + '-percentage-'+ stringToID(gender)}>
+                            <Col  sm = {Object.keys(this.props.tagInfo.frequency.byGender).length > 1? 4 :  10} 
+                                  md = {Object.keys(this.props.tagInfo.frequency.byGender).length > 1? 3 :  9} 
+                                  xl = {Object.keys(this.props.tagInfo.frequency.byGender).length > 1? 4 :  10}
+                                  id = {stringToID(this.props.tag) + '-' + stringToID(gender) + '-tooltip-div'}
+                                  key = {stringToID(this.props.tag) + '-' + stringToID(gender) + '-tooltip-div'}>
+                            <div className="text-center statistics-subtitle" key={stringToID(this.props.tag) + '-percentage-'+ stringToID(gender)}>
                                 {`${Math.round(genFreq * this.props.genderFrequencies[gender])}/${this.props.genderFrequencies[gender]}`}
                             </div>
-                                <Progress value={genFreq * 100} key={stringToID(this.props.disease) + '-progress-' + stringToID(gender)} className = {gender.toLowerCase()} />
+                                <Progress value={genFreq * 100} key={stringToID(this.props.tag) + '-progress-' + stringToID(gender)} className = {gender.toLowerCase()} />
                             </Col>
-                            <UncontrolledTooltip key={stringToID(this.props.disease) + '-tooltip'} placement="bottom" isOpen={this.state.genderTooltip === gender}
-                                 target={stringToID(this.props.disease) + '-' + stringToID(gender) + '-tooltip-div'} toggle={() => this.toggleTooltip(gender)}>
-                                        {this.props.diseaseInfo.ancestorsByGender[gender].map(ancestor => <p key={stringToID(this.props.disease) + '-progress-bar-' + stringToID(ancestor)}>
+                            <UncontrolledTooltip key={stringToID(this.props.tag) + '-tooltip'} placement="bottom" isOpen={this.state.genderTooltip === gender}
+                                                 target={stringToID(this.props.tag) + '-' + stringToID(gender) + '-tooltip-div'} toggle={() => this.toggleTooltip(gender)}>
+                                        {this.props.tagInfo.ancestorsByGender[gender].map(ancestor => <p key={stringToID(this.props.tag) + '-progress-bar-' + stringToID(ancestor)}>
                                                                                                     {ancestor}
                                                                                                     </p>)}
                             </UncontrolledTooltip>

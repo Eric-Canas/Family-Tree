@@ -1,7 +1,8 @@
 import IndividualNode from "./individualNode";
 import { DiGraph, toEdgelist } from "jsnetworkx";
-import { getPositions, DEFAULT_SIZE, sharingBloodlineNodes } from './graphUtils';
+import { getPositions, DEFAULT_SIZE, sharingBloodlineNodes, toStructuredArray } from './graphUtils';
 import { WIDTH, HEIGHT } from '../model/components/familyTreeContainer';
+import { computeHeadingLevel } from "@testing-library/dom";
 
 const MAX_ID = 10000;
 const ID = 0;
@@ -29,11 +30,28 @@ class FamilyGraph {
 
     getSharingBloodlineProperties(property = null, originID=0){
         const ancestors = sharingBloodlineNodes(this.graph, originID);
+        if (ancestors.length === 0) return null;
         if (!property){
             return ancestors.map(ancestor => this.nodes[ancestor].properties)
         } else {
             return ancestors.map(ancestor => this.nodes[ancestor].properties[property]).flat();
         }
+    }
+
+    getGenerationsInfo(originID = 0, info=null){
+        const structuredArray = toStructuredArray(this.graph, this.nodes)
+        const generations = {};
+        for(const [id, info] of Object.entries(structuredArray)){
+            if (id > -1){
+                const level = info.level;
+                if (info.couples.length > 0) info.children = [...info.children, ...structuredArray[parseInt(info.couples[0])].children];
+                else if (info.coupleOf !== null) info.children = [...info.children, ...structuredArray[parseInt(info.coupleOf)].children];
+
+                if (!(level in generations)) generations[level] = {}; 
+                generations[level][id] = info;
+            }
+        }
+        return generations;
     }
 
     generateKey() {
