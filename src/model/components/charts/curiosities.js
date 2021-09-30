@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Container } from 'reactstrap';
-import AverageAgeToHaveChildren from './averageAgeToHaveChildren';
+import AboutOffspring from './aboutOffspring';
 
 class Curiosities extends Component {
     constructor(props) {
@@ -13,7 +13,7 @@ class Curiosities extends Component {
                         <h2> Curiosities </h2>
                     </div>
                     <Container>
-                        <AverageAgeToHaveChildren graph = {this.props.graph}/>
+                        <AboutOffspring graph = {this.props.graph}/>
                     </Container>
                 </article>
                 )
