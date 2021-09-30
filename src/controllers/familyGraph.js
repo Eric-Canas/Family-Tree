@@ -14,12 +14,13 @@ class FamilyGraph {
         //Graph only manages the ids structure, this.nodes contains all the node information
         this.graph = new DiGraph();
         if (graph) {
-            for (const [id, node] of Object.entries(graph.nodes)){
+            for (let [id, node] of Object.entries(graph.nodes)){
+                id = parseInt(id)
                 this.nodes[id] = new IndividualNode(id, node.properties)
                 this.graph.addNode(id);
             }
             for (const [v, w, attributes] of graph.edges){
-                this.graph.addEdge(v, w, attributes);
+                this.graph.addEdge(parseInt(v), parseInt(w), attributes);
             }
         }
     }
@@ -66,6 +67,8 @@ class FamilyGraph {
     }
 
     addRelation(v, w, relationship) {
+        v = parseInt(v);
+        w = parseInt(w);
         console.log("CURRENT NODES from Family Graph",this.nodes);
         switch (relationship.toLowerCase()) {
             case "child":
@@ -99,7 +102,7 @@ class FamilyGraph {
     }
 
     addNode(node) {
-        const id = this.generateKey();
+        const id = parseInt(this.generateKey());
         this.nodes[id] = new IndividualNode(id, node);
         this.graph.addNode(id);
         if (node.relationship) {
@@ -108,7 +111,7 @@ class FamilyGraph {
     }
 
     deleteNodeByID(id) {
-        this.graph.removeNode(id)
+        this.graph.removeNode(parseInt(id))
     }
 
     serializeGraph() {

@@ -100,7 +100,7 @@ async function uploadTree () {
 }
 export{uploadTree};
 
-function getRandomNumber(range=1000000){
+function getRandomNumber(range=100000000){
     return ~~(Math.random()*range)
 }
 export {getRandomNumber};

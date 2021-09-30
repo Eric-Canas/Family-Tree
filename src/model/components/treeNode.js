@@ -52,7 +52,7 @@ class TreeNode extends Component {
                         </CardBody>
                     </Col>
                 </Row>
-                <UncontrolledTooltip key={'card-tooltip-' + this.props.node.id} placement="auto" className="add-node-tooltip" trigger="focus"
+                <UncontrolledTooltip key={'card-tooltip-' + this.props.node.id} placement="bottom" className="add-node-tooltip" trigger="focus"
                          hideArrow={false} target={'card-' + this.props.node.id}>
                             <AddNodeButton editButtons={true} delete={this.props.delete} showModal={this.showForm}/>
                 </UncontrolledTooltip>

@@ -1,5 +1,6 @@
-import { shortestPathLength, toEdgelist, edges, createEmptyCopy } from "jsnetworkx";
+import { shortestPathLength, toEdgelist, edges, createEmptyCopy, DiGraph } from "jsnetworkx";
 import d3 from "d3"
+import { getRandomNumber } from "../model/auxiliars";
 const EDGE_W = 1;
 const EDGE_ATTRIBUTES = 2;
 const SPACING = 20;
@@ -31,7 +32,6 @@ export { relationsSubgraph };
 function sharingBloodlineNodes(graph, originID = 0){
     const reversedGraph = reverseGraph(graph);
     // WARNING: Remember that this solution is for the case where parent is only one, and not its couple
-    //debugger
     const reversedEdges = toEdgelist(reversedGraph, [originID]).filter(edge => edge[EDGE_ATTRIBUTES].relationship === 'child');
     if (reversedEdges.length > 1) throw new Error("Sharing Bloodlines found more than one parent? Did you set both parents in the graph?")
     else if(reversedEdges.length === 0) return [];
@@ -50,7 +50,9 @@ export {sharingBloodlineNodes};
 function toStructuredArray(graph, nodes = {}) {
     let array = {};
     // ------------------- BUILD THE STRUCTURE ------------------
-    for (const [v, w, attributes] of toEdgelist(graph)) {
+    for (let [v, w, attributes] of toEdgelist(graph)) {
+        v = parseInt(v);
+        w = parseInt(w);
         const relationship = attributes.relationship;
         //TODO: ORDER THE CHILDREN BEFORE DFS
         if (!(v in array)) array[v] = { id: v, name: v in nodes? nodes[v].properties.name : null, children: [], parents: [], couples: [], coupleOf : null, siblings: [], level: null };
@@ -59,7 +61,8 @@ function toStructuredArray(graph, nodes = {}) {
             array[v].children.push(w);
             array[w].parents.push(v);
             //Add all siblings to its child
-            for (const [current, child, attributes] of toEdgelist(graph, [v])) {
+            for (let [current, child, attributes] of toEdgelist(graph, [v])) {
+                child = parseInt(child)
                 //If its child of its parent and is not itself
                 if (attributes.relationship === "child" && child !== w) array[w].siblings.push(child);
             }
@@ -72,16 +75,33 @@ function toStructuredArray(graph, nodes = {}) {
     }
 
     // ------------------- SET THE LEVELS ------------------
-    const noCouplesGraph = relationsSubgraph(graph, 'couple', true)
+    const auxGraph = new DiGraph(graph);
+    for (let id of Object.keys(array)) {
+        id = parseInt(id);
+        let newChilds = [];
+        if (array[id].couples.length > 0) newChilds =  array[array[id].couples[0]].children;
+        if (array[id].coupleOf !== null) newChilds =  [...newChilds, ...array[array[id].coupleOf].children];
+        for (const child of newChilds){
+            auxGraph.addEdge(id, child, {relationship: 'child'});
+        }
+    }
+    const noCouplesGraph = relationsSubgraph(auxGraph, 'couple', true)
+
     const graphRadius = radius(noCouplesGraph);
     const shortestPaths = shortestPathLength(noCouplesGraph);
+    const edgeList = toEdgelist(noCouplesGraph);
     let olders = [];
     if (Object.keys(array).length > 0) {
         array[-1] = { id: -1, name: "root", children: [], parents: [], couples: [], coupleOf: null, siblings: [], level: -1 }
     }
-    for (const id of Object.keys(array)) {
-        if (id != -1 && Math.max(...Array.from(shortestPaths.get(parseInt(id)).values())) === graphRadius) {
+
+    let avoid = [];
+    for (let id of Object.keys(array)) {
+        id = parseInt(id);
+        if (id !== -1 && !avoid.includes(id) && Math.max(...Array.from(shortestPaths.get(id).values())) === graphRadius) {
             olders.push(id);
+            avoid = [...avoid, ...array[id].couples];
+            if (array[id].coupleOf !== null) avoid.push(array[id].coupleOf);
             array[id].level = 0;
             array[id].parents = [-1];
             array[-1].children.push(id);
@@ -92,17 +112,18 @@ function toStructuredArray(graph, nodes = {}) {
         for (const coupleID of array[id].couples) {
             fillLevels(array, coupleID, 0);
         }
+        if (array[id].coupleOf !== null){
+            fillLevels(array, array[id].coupleOf, 0);
+        }
         for (const childID of array[id].children) {
             fillLevels(array, childID, 1);
         }
     }
-
     return array;
 }
 export {toStructuredArray};
 
 function fillLevels(array, rootID, currentLevel) {
-    //debugger;
     if (array[rootID].level === null) {
         array[rootID].level = currentLevel;
         //If i'm orphan and don't have couple or if I have a couple but we both are orphans
@@ -141,6 +162,9 @@ function fillLevels(array, rootID, currentLevel) {
 
         for (const parentID of array[rootID].parents){
             fillLevels(array, parentID, currentLevel - 1);
+        }
+        if (array[rootID].coupleOf !== null){
+            fillLevels(array, array[rootID].coupleOf, currentLevel);
         }
         
     }
@@ -194,7 +218,7 @@ function compareNodes(aID, bID, array, visited){
         //If it has been already visited try to go first
         if (itsCoupleIsVisited(aID)){
             //If they are in the same conditions return comparison between amount of children
-            if(itsCoupleIsVisited(bID)) return childrenLength(bID) - childrenLength(aID);
+            if(itsCoupleIsVisited(bID) && itsCoupleHaveParents(bID)) return childrenLength(bID) - childrenLength(aID);
             //Otherwise just first
             else return -1;
         //If it is not visited yet try to go last (to make the union simpler)
@@ -215,7 +239,7 @@ function compareNodes(aID, bID, array, visited){
         //If it is not visited yet try to go last (to make the union simpler)
         } else {
             // If there is a b node in the same situation return a comparison between both
-            if(haveCouple(aID) && !itsCoupleIsVisited(aID)) return childrenLength(bID) - childrenLength(aID);
+            if(haveCouple(aID) && !itsCoupleIsVisited(aID) && itsCoupleHaveParents(aID)) return childrenLength(bID) - childrenLength(aID);
             //Otherwise just last
             else return -1;
         }
@@ -232,34 +256,35 @@ function buildDFSStructure(array, rootID, visited = {}) {
         array[rootID].children = array[rootID].children.sort((a, b) => compareNodes(a, b, array, visited))
         if (rootID == -1) {
             return { name: "root", id: -1, hidden: true, children: array[-1].children.map(childID => buildDFSStructure(array, childID, visited)).flat() }
-        } else if (array[rootID].couples.length === 0) {
+        } else if (array[rootID].couples.length === 0 && array[rootID].coupleOf === null) {
             return { name: array[rootID].name, id: rootID, hidden: false, no_parent: array[rootID].parents.length > 0, children: array[rootID].children.map(childID => buildDFSStructure(array, childID, visited)).flat() }
-        } else if (array[rootID].couples.length > 0) {
-            const childrenList = [...array[rootID].children, ...array[array[rootID].couples[0]].children];
+        } else if (array[rootID].couples.length > 0 || array[rootID].coupleOf !== null) {
+            const couple = array[rootID].couples.length > 0? array[rootID].couples[0] : array[rootID].coupleOf;
+            const childrenList = [...array[rootID].children, ...array[couple].children].sort((a, b) => compareNodes(a, b, array, visited));
             const rootNode = { name: array[rootID].name, id: rootID, hidden: false, no_parent: array[rootID].parents.length > 0 };
             // If couple have parents let it be
-            if (array[array[rootID].couples[0]].parents.length > 0) {
+            if (array[couple].parents.length > 0) {
                 // If it has been already visited, it will have created the family, so generate only the root and thats all (or if there are no childs)
-                if (array[rootID].couples[0] in visited || childrenList.length === 0) {
+                if (couple in visited || childrenList.length === 0) {
                     return rootNode;
                     // Otherwise create the node and the family
                 } else {
                     return [rootNode, {
-                        name: "Family " + array[rootID].name + "-" + array[array[rootID].couples[0]].name,
-                        id: rootID * 100 + array[rootID].couples[0] * 10, hidden: true, no_parent: true,
+                        name: "Family " + array[rootID].name + "-" + array[couple].name,
+                        id: getRandomNumber(), hidden: true, no_parent: true,
                         children: childrenList.map(childID => buildDFSStructure(array, childID, visited)).flat()
                     }];
                 }
                 // If the couple have no parents it will be a pseudo sibling
             } else {
-                visited[array[rootID].couples[0]] = true
-                const coupleNode = { name: array[array[rootID].couples[0]].name + " - Couple of " + array[rootID].name,
-                                     id: array[rootID].couples[0], hidden: false, no_parent: true }
+                visited[couple] = true
+                const coupleNode = { name: array[couple].name + " - Couple of " + array[rootID].name,
+                                     id: couple, hidden: false, no_parent: true }
                 if (childrenList.length > 0) {
                     //Build everithing
                     return [rootNode,
                         {
-                            name: "Family " + array[rootID].name + "-" + array[array[rootID].couples[0]].name,
+                            name: "Family " + array[rootID].name + "-" + array[couple].name,
                             id: parseInt(rootID)+0.5, hidden: true, no_parent: true,
                             children: childrenList.map(childID => buildDFSStructure(array, childID, visited)).flat()
                         },
