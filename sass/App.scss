@@ -51,6 +51,12 @@ $primary-color: #0d6efd;
     z-index: 10;
     width: 100%;
     background-color:#fdfdfdf3 ;
+    .navbar-brand:hover{
+        cursor: pointer;
+    }
+    .nav-item:hover{
+        cursor: pointer;
+    }
 }
 
 $imgWidth: 215px;
@@ -95,6 +101,9 @@ $imgWidth: 215px;
     }
 }
 
+$linksThickness : 6px;
+$linksColor : #bababa;
+$marriageColor : #909090;
 #family-tree-container {
     top: calc(1.1rem + 40px);
     .tree-node-container {
@@ -103,6 +112,19 @@ $imgWidth: 215px;
         .country-flag{
             max-height: 20px; 
         }
+    }
+    .relationship-link{
+        display: block;
+        position: absolute;
+        background-color: $linksColor;
+        height: $linksThickness;
+        width: $linksThickness;
+        z-index: -2;
+    }
+    .marriage-link{
+        background-color: $marriageColor;
+        box-shadow: #bababa 0px 2px 4px;
+        z-index: -2;
     }
 }
 

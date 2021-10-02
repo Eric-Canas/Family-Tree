@@ -40,8 +40,7 @@ class MainFrame extends Component {
             <div>
                 <MainMenu selectOption={this.selectOption} additionalOptions={Object.keys(this.ADDITIONAL_OPTIONS)} className="main-menu"
                           downloadFunction = {this.downloadTree} uploadFunction = {this.uploadTree} isEmpty={this.state.familyGraph.isEmpty()}/>
-
-                <FamilyTreeContainer familyGraph={this.state.familyGraph} visible={!visible} updateState={this.updateState}/>
+                    {!visible? <FamilyTreeContainer familyGraph={this.state.familyGraph} visible={!visible} updateState={this.updateState}/> : null}
                 
                 <Fade in={visible} className = "options-background" style={{zIndex : visible? 1 : -1}}>
                     {visible? <StatisticsFrame graph={this.state.familyGraph}/> : null}

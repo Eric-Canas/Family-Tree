@@ -49,6 +49,12 @@
   width: 100%;
   background-color: #fdfdfdf3;
 }
+.main-menu .navbar-brand:hover {
+  cursor: pointer;
+}
+.main-menu .nav-item:hover {
+  cursor: pointer;
+}
 
 .avatar-picture-wrapper {
   width: fit-content;
@@ -94,6 +100,19 @@
 }
 #family-tree-container .tree-node-container .country-flag {
   max-height: 20px;
+}
+#family-tree-container .relationship-link {
+  display: block;
+  position: absolute;
+  background-color: #bababa;
+  height: 6px;
+  width: 6px;
+  z-index: -2;
+}
+#family-tree-container .marriage-link {
+  background-color: #909090;
+  box-shadow: #bababa 0px 2px 4px;
+  z-index: -2;
 }
 
 .invisible {

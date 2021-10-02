@@ -7,7 +7,8 @@ import { computeHeadingLevel } from "@testing-library/dom";
 const MAX_ID = 10000;
 const ID = 0;
 const RELATIONSHIP = 1;
-
+const X = 0;
+const Y = 1;
 class FamilyGraph {
     constructor(graph = null) {
         this.nodes = {};
@@ -85,20 +86,44 @@ class FamilyGraph {
     }
 
     getNodesWithPosition() {
-        const positions = getPositions(this.graph, this.nodes);
+        const [positions, links, infoArray] = getPositions(this.graph, this.nodes);
         const xOffset = -Math.min(...Object.values(positions).map(position => position.x));
         const yOffset = -Math.min(...Object.values(positions).filter(position => position.id != -1).map(position => position.y));
-        let output = [];
+        let nodes = {};
         for (const dataPosition of Object.values(positions)) {
             const id = dataPosition.id;
             if (id in this.nodes) {
-                output.push({
+                nodes[id] = {
                     x: xOffset + dataPosition.x, y: yOffset + dataPosition.y,
                     size: DEFAULT_SIZE, node: this.nodes[id]
-                });
+                };
             }
         }
-        return output;
+        const coupleID = (id) => infoArray[id].couples.length > 0? infoArray[id].couples[0] : infoArray[id].coupleOf;
+        const couplePositionX = (id) => (nodes[parseInt(id)].x + nodes[parseInt(id)].size[X]/2 + nodes[coupleID(parseInt(id))].x + nodes[coupleID(parseInt(id))].size[X]/2)/2
+
+        const linkPositions = [];
+        for (const link of links){
+            const sid = link.source.id, did = link.target.id;
+            if (sid > -1 && did > -1 && did in nodes){
+                if (infoArray[did].parents.length > 0){
+                    linkPositions.push({ sx : sid in nodes? nodes[sid].x + nodes[sid].size[X]/2 : couplePositionX(sid), sy : sid in nodes? nodes[sid].y + nodes[sid].size[Y]/2 : nodes[parseInt(sid)].y + nodes[parseInt(sid)].size[Y]/2, 
+                                        dx : did in nodes? nodes[did].x + nodes[did].size[X]/2 : link.target.x + xOffset, dy : did in nodes? nodes[did].y + nodes[did].size[Y]/2 : nodes[parseInt(did)].y + nodes[parseInt(did)].size[Y]/2,
+                                        sname: link.source.name, sid : sid, dname : link.target.name, did : did, relationship: 'child'});
+                    }
+            }
+        }
+        // Build the couples
+        for (let [sid, info] of Object.entries(infoArray)){
+            sid = parseInt(sid);
+            const couple = info.coupleOf;
+            if (couple !== null){
+                linkPositions.push({ sx : nodes[sid].x + nodes[sid].size[X]/2, sy : nodes[sid].y + nodes[sid].size[Y]/2, 
+                    dx : nodes[couple].x + nodes[couple].size[X]/2, dy : nodes[couple].y + nodes[couple].size[Y]/2,
+                    sname: infoArray[sid].name, sid : sid, dname : infoArray[couple].name, did : couple, relationship: 'couple'});
+            }
+        }
+        return [Object.values(nodes), linkPositions];
     }
 
     addNode(node) {

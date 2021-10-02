@@ -182,22 +182,21 @@ function getPositions(graph, nodes = {}) {
     if (Object.keys(structuredArray).length > 0) {
         const root = buildDFSStructure(structuredArray, -1, {});
         console.log("DFS STRUCTURE", root);
-        for (const id of graph.nodes()) {
+        /*for (const id of graph.nodes()) {
             outputPositions[id] = { id: id, x: id * 200, y: id * 200, size: DEFAULT_SIZE, couples: [] };
-        }
-        const tree = d3.layout.tree().nodeSize([500, 500]).separation((a, b) => {console.log("nodeA", a, "nodeB", b); return a.hidden || b.hidden? 0.7 : 1;});
-
+        }*/
+        const tree = d3.layout.tree().nodeSize([500, 500]).separation((a, b) => {/*console.log("nodeA", a, "nodeB", b);*/ return a.hidden || b.hidden? 0.7 : 1;});
         const nodes = tree.nodes(root);
         const links = tree.links(nodes);
         console.log("NODES OF TREE", nodes);
         console.log("LINKS OF TREE", links);
-        return nodes;
+        return [nodes, links, structuredArray];
     } else {
         for (const id of graph.nodes()) {
             outputPositions[id] = { id: id, x: id * 200, y: id * 200, size: DEFAULT_SIZE, couples: [] };
         }
     }
-    return outputPositions;
+    return [outputPositions, [], structuredArray];
 }
 export { getPositions };
 
@@ -271,7 +270,7 @@ function buildDFSStructure(array, rootID, visited = {}) {
                 } else {
                     return [rootNode, {
                         name: "Family " + array[rootID].name + "-" + array[couple].name,
-                        id: getRandomNumber(), hidden: true, no_parent: true,
+                        id: parseInt(rootID)+ 0.5, hidden: true, no_parent: true,
                         children: childrenList.map(childID => buildDFSStructure(array, childID, visited)).flat()
                     }];
                 }
