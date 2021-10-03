@@ -31,6 +31,16 @@ class FamilyGraph {
     haveBothParents(id){
         id = parseInt(id)
         const infoArray = toStructuredArray(this.graph, this.nodes, false);
+        // Check if there is a sibling couple with parents
+        if (infoArray[id].coupleOf !== null){
+            for (const sibling of infoArray[infoArray[id].coupleOf].siblings){
+                const couple = infoArray[sibling].couples.length > 0? infoArray[sibling].couples[0] : infoArray[sibling].coupleOf;
+                if (couple !== null && infoArray[couple].parents.length > 0){
+                    // There is a couple of a sibling with parents
+                    return true;
+                }
+            }
+        }
         return infoArray[id].parents.length > 0 && (infoArray[infoArray[id].parents[0]].couples.length > 0 || infoArray[infoArray[id].parents[0]].coupleOf !== null);
     }
 

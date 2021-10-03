@@ -55,7 +55,8 @@ class TreeNode extends Component {
                                             haveCouple={this.props.graph.coupleOf(this.props.node.id) !== null}/>
                 </UncontrolledTooltip>
                 <ModalForm modal={this.state.showModal} close={this.hideForm} relationship={this.state.relation} 
-                            node={this.state.relation? {relationship : [this.props.node.id, this.state.relation]} : this.nodeCopy } save={this.props.save} update={this.updateNode}
+                            node={this.state.relation? {relationship : [this.props.node.id, this.state.relation]} : this.nodeCopy } 
+                            save={this.props.save} update={this.updateNode}
                             nodeName = {this.props.node.properties.name}/>
             </Card>
         )
