@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink,
-         UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, NavbarText} from 'reactstrap';
+         UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
 import {stringToTittleCase, stringToID} from '../auxiliars'
 
 class MainMenu extends Component {
@@ -33,7 +33,7 @@ class MainMenu extends Component {
                                 </DropdownMenu>
                             </UncontrolledDropdown>
 
-                            {this.props.additionalOptions.map(option => (<NavItem>
+                            {this.props.additionalOptions.map(option => (<NavItem key={stringToID(option)+'nav-item'}>
                                                                             <NavLink key={stringToID(option)} onClick={() => {this.props.selectOption(option); this.close();}} disabled={this.props.isEmpty}>
                                                                                 {stringToTittleCase(option)}
                                                                             </NavLink>
@@ -43,13 +43,9 @@ class MainMenu extends Component {
                                     View
                                 </DropdownToggle>
                                 <DropdownMenu right>
-                                    <DropdownItem>
-                                        Shit1
-                                    </DropdownItem>
-                                    <DropdownItem divider />
-                                    <DropdownItem>
-                                        Shit2
-                                    </DropdownItem>
+                                        <DropdownItem disabled={true}> 
+                                            Visualization options coming soon...
+                                        </DropdownItem>
                                 </DropdownMenu>
                             </UncontrolledDropdown>
                         </Nav>

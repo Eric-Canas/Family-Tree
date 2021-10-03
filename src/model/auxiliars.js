@@ -88,7 +88,7 @@ async function uploadTree () {
     uploader.hidden = true;
     uploader.accept = "application/JSON";
     let jsonPromise = new Promise((resolve, reject) => {
-        uploader.onchange = (event) => {  console.log(event.target.files[0]);
+        uploader.onchange = (event) => {
             const reader = new FileReader();
             reader.onload = () => resolve(JSON.parse(reader.result));
             reader.onabort = () => reject("File Reader aborted");

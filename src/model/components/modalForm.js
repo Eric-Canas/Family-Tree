@@ -11,7 +11,6 @@ class ModalForm extends Component {
     }
 
     saveNode(){
-        console.log("SAVE NODE FROM MODAL FORM", this.props.node)
         if (this.props.relationship===null){
             this.props.update(this.props.node);
         } else {
@@ -24,7 +23,9 @@ class ModalForm extends Component {
     render() {
         return (
                 <Modal isOpen={this.props.modal} toggle={this.props.close} className = "modal-form">
-                    <ModalHeader toggle={this.props.close}>{this.props.header || this.props.relationship + " of " + this.props.kin}</ModalHeader>
+                    <ModalHeader toggle={this.props.close}>{this.props.header ||
+                                                             `${this.props.relationship !== null? this.props.relationship + ' of ' : 'Updating '} ${this.props.nodeName}`}
+                    </ModalHeader>
                     <ModalBody>
                         <IndividualForm updateNode={this.updateNode} getNodeInfo={this.getNodeInfo}/>
                     </ModalBody>

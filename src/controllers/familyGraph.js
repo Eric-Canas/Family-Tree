@@ -1,8 +1,6 @@
 import IndividualNode from "./individualNode";
 import { DiGraph, toEdgelist } from "jsnetworkx";
 import { getPositions, DEFAULT_SIZE, sharingBloodlineNodes, toStructuredArray } from './graphUtils';
-import { WIDTH, HEIGHT } from '../model/components/familyTreeContainer';
-import { computeHeadingLevel } from "@testing-library/dom";
 
 const MAX_ID = 10000;
 const ID = 0;
@@ -28,6 +26,18 @@ class FamilyGraph {
 
     isEmpty(){
         return Object.keys(this.nodes).length === 0;
+    }
+
+    haveBothParents(id){
+        id = parseInt(id)
+        const infoArray = toStructuredArray(this.graph, this.nodes, false);
+        return infoArray[id].parents.length > 0 && (infoArray[infoArray[id].parents[0]].couples.length > 0 || infoArray[infoArray[id].parents[0]].coupleOf !== null);
+    }
+
+    coupleOf(id){
+        //Returns null if node have no couples
+        const infoArray = toStructuredArray(this.graph, this.nodes, false);
+        return infoArray[id].couples.length > 0? infoArray[id].couples[0] : infoArray[id].coupleOf;
     }
 
     getSharingBloodlineProperties(property = null, originID=0){
@@ -70,25 +80,34 @@ class FamilyGraph {
     addRelation(v, w, relationship) {
         v = parseInt(v);
         w = parseInt(w);
-        console.log("CURRENT NODES from Family Graph",this.nodes);
         switch (relationship.toLowerCase()) {
             case "child":
                 this.graph.addEdge(v, w, { relationship: "child" });
                 break;
             case "parent":
-                this.graph.addEdge(w, v, { relationship: "child" });
+                const info = toStructuredArray(this.graph, this.nodes, false)
+                if (info[v].parents.length === 0){
+                    this.graph.addEdge(w, v, { relationship: "child" });
+                }
+                else if (info[v].parents.length === 1){
+                    this.addRelation(w, info[v].parents[0], "couple");
+                } else {
+                    throw new Error(`Node ${v} have more parents than expected: ${info[v].parents}`)
+                }
                 break;
             case "couple":
                 this.graph.addEdge(v, w, { relationship: "couple" });
                 //this.graph.addEdge(w, v, {relationship : "couple"});
                 break;
+            default:
+                throw new Error(`Relation: ${relationship} not understood`);
         }
     }
 
     getNodesWithPosition() {
         const [positions, links, infoArray] = getPositions(this.graph, this.nodes);
         const xOffset = -Math.min(...Object.values(positions).map(position => position.x));
-        const yOffset = -Math.min(...Object.values(positions).filter(position => position.id != -1).map(position => position.y));
+        const yOffset = -Math.min(...Object.values(positions).filter(position => parseInt(position.id) !== -1).map(position => position.y));
         let nodes = {};
         for (const dataPosition of Object.values(positions)) {
             const id = dataPosition.id;

@@ -20,7 +20,7 @@ class IndividualNode {
             defunctionDay: node.defunctionDay || null,
             defunctionMonth: node.defunctionMonth || null,
             defunctionYear: node.defunctionYear || null,
-            gender: node.gender || "unknown",
+            gender: node.gender || "Unknown",
             professions: node.professions || [],
             alias: node.alias || null,
             biography: node.biography || null,
@@ -33,13 +33,10 @@ class IndividualNode {
             defunctionProvince: node.defunctionProvince || null,
             defunctionCity: node.defunctionCity || null,
             defunctionDisease: node.defunctionDisease || [],
-            defunctionDetails: node.defunctionDetails || null,
-            highlight: "highlight" in node ? node.highlight : false
+            defunctionDetails: node.defunctionDetails || null
         }
 
         this.relevantInformation = { location: this.locationAttention(), biography: node.biography !== null }
-
-        console.log("Saved Node", this.properties);
     }
 
     locationAttention() {
@@ -67,7 +64,6 @@ class IndividualNode {
         let birthDate = null;
         if (this.properties.bornYear) {
             birthDate = new Date(this.properties.bornYear, (this.properties.bornMonth || 1) - 1, this.properties.bornDay || 1);
-            console.log("Birth Date", birthDate, this.properties.bornDay)
             birthDateString = (this.properties.bornDay || "") +
                 (this.properties.bornMonth ? (" " + capitalize(birthDate.toLocaleString('default', { month: 'long' }))) + " " : "") +
                 this.properties.bornYear;
@@ -80,7 +76,6 @@ class IndividualNode {
             defunctionDateString = (this.properties.defunctionDay || "") +
                 (this.properties.defunctionMonth ? (" " + capitalize(defunctionDate.toLocaleString('default', { month: 'long' }))) + " " : "") +
                 this.properties.defunctionYear;
-            console.log("DEFUNCTION", defunctionDateString);
         }
         if (birthDate) {
             dateString = birthDateString + (defunctionDate !== null ? " - " + defunctionDateString : '');

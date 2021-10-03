@@ -3,9 +3,6 @@ import { Container } from 'reactstrap';
 import AboutOffspring from './aboutOffspring';
 
 class Curiosities extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() {
         return (<article className="chart-collection" style={{zIndex : 2}}>

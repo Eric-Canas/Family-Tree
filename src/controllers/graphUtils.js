@@ -1,11 +1,10 @@
-import { shortestPathLength, toEdgelist, edges, createEmptyCopy, DiGraph } from "jsnetworkx";
+import { shortestPathLength, toEdgelist, createEmptyCopy, DiGraph } from "jsnetworkx";
 import d3 from "d3"
-import { getRandomNumber } from "../model/auxiliars";
 const EDGE_W = 1;
 const EDGE_ATTRIBUTES = 2;
-const SPACING = 20;
 const DEFAULT_SIZE = [500, 200]
 const radius = (graph) => Math.max(...Array.from(shortestPathLength(graph).values()).map(map => Array.from(map.values())).flat());
+
 export { radius, DEFAULT_SIZE };
 
 function relationsSubgraph(graph, relationship, exclude = false) {
@@ -47,7 +46,7 @@ function sharingBloodlineNodes(graph, originID = 0){
 }
 export {sharingBloodlineNodes};
 
-function toStructuredArray(graph, nodes = {}) {
+function toStructuredArray(graph, nodes = {}, includeLevels = true) {
     let array = {};
     // ------------------- BUILD THE STRUCTURE ------------------
     for (let [v, w, attributes] of toEdgelist(graph)) {
@@ -61,7 +60,7 @@ function toStructuredArray(graph, nodes = {}) {
             array[v].children.push(w);
             array[w].parents.push(v);
             //Add all siblings to its child
-            for (let [current, child, attributes] of toEdgelist(graph, [v])) {
+            for (let [, child, attributes] of toEdgelist(graph, [v])) {
                 child = parseInt(child)
                 //If its child of its parent and is not itself
                 if (attributes.relationship === "child" && child !== w) array[w].siblings.push(child);
@@ -73,50 +72,50 @@ function toStructuredArray(graph, nodes = {}) {
             array[w].coupleOf = v
         }
     }
+    if (includeLevels){
+        // ------------------- SET THE LEVELS ------------------
+        const auxGraph = new DiGraph(graph);
+        for (let id of Object.keys(array)) {
+            id = parseInt(id);
+            let newChilds = [];
+            if (array[id].couples.length > 0) newChilds =  array[array[id].couples[0]].children;
+            if (array[id].coupleOf !== null) newChilds =  [...newChilds, ...array[array[id].coupleOf].children];
+            for (const child of newChilds){
+                auxGraph.addEdge(id, child, {relationship: 'child'});
+            }
+        }
+        const noCouplesGraph = relationsSubgraph(auxGraph, 'couple', true)
 
-    // ------------------- SET THE LEVELS ------------------
-    const auxGraph = new DiGraph(graph);
-    for (let id of Object.keys(array)) {
-        id = parseInt(id);
-        let newChilds = [];
-        if (array[id].couples.length > 0) newChilds =  array[array[id].couples[0]].children;
-        if (array[id].coupleOf !== null) newChilds =  [...newChilds, ...array[array[id].coupleOf].children];
-        for (const child of newChilds){
-            auxGraph.addEdge(id, child, {relationship: 'child'});
+        const graphRadius = radius(noCouplesGraph);
+        const shortestPaths = shortestPathLength(noCouplesGraph);
+        let olders = [];
+        if (Object.keys(array).length > 0) {
+            array[-1] = { id: -1, name: "root", children: [], parents: [], couples: [], coupleOf: null, siblings: [], level: -1 }
         }
-    }
-    const noCouplesGraph = relationsSubgraph(auxGraph, 'couple', true)
 
-    const graphRadius = radius(noCouplesGraph);
-    const shortestPaths = shortestPathLength(noCouplesGraph);
-    const edgeList = toEdgelist(noCouplesGraph);
-    let olders = [];
-    if (Object.keys(array).length > 0) {
-        array[-1] = { id: -1, name: "root", children: [], parents: [], couples: [], coupleOf: null, siblings: [], level: -1 }
-    }
-
-    let avoid = [];
-    for (let id of Object.keys(array)) {
-        id = parseInt(id);
-        if (id !== -1 && !avoid.includes(id) && Math.max(...Array.from(shortestPaths.get(id).values())) === graphRadius) {
-            olders.push(id);
-            avoid = [...avoid, ...array[id].couples];
-            if (array[id].coupleOf !== null) avoid.push(array[id].coupleOf);
-            array[id].level = 0;
-            array[id].parents = [-1];
-            array[-1].children.push(id);
+        let avoid = [];
+        for (let id of Object.keys(array)) {
+            id = parseInt(id);
+            if (id !== -1 && !avoid.includes(id) && Math.max(...Array.from(shortestPaths.get(id).values())) === graphRadius) {
+                olders.push(id);
+                avoid = [...avoid, ...array[id].couples];
+                if (array[id].coupleOf !== null) avoid.push(array[id].coupleOf);
+                array[id].level = 0;
+                array[id].parents = [-1];
+                array[-1].children.push(id);
+            }
         }
-    }
-    //---- FILL THE REST OF LEVELS
-    for (const id of olders) {
-        for (const coupleID of array[id].couples) {
-            fillLevels(array, coupleID, 0);
-        }
-        if (array[id].coupleOf !== null){
-            fillLevels(array, array[id].coupleOf, 0);
-        }
-        for (const childID of array[id].children) {
-            fillLevels(array, childID, 1);
+        //---- FILL THE REST OF LEVELS
+        for (const id of olders) {
+            for (const coupleID of array[id].couples) {
+                fillLevels(array, coupleID, 0);
+            }
+            if (array[id].coupleOf !== null){
+                fillLevels(array, array[id].coupleOf, 0);
+            }
+            for (const childID of array[id].children) {
+                fillLevels(array, childID, 1);
+            }
         }
     }
     return array;
@@ -177,19 +176,15 @@ function newNegativeID(array) {
 
 function getPositions(graph, nodes = {}) {
     const structuredArray = toStructuredArray(graph, nodes);
-    console.log("STRUCTURED ARRAY", structuredArray)
     let outputPositions = {}
     if (Object.keys(structuredArray).length > 0) {
         const root = buildDFSStructure(structuredArray, -1, {});
-        console.log("DFS STRUCTURE", root);
         /*for (const id of graph.nodes()) {
             outputPositions[id] = { id: id, x: id * 200, y: id * 200, size: DEFAULT_SIZE, couples: [] };
         }*/
-        const tree = d3.layout.tree().nodeSize([500, 500]).separation((a, b) => {/*console.log("nodeA", a, "nodeB", b);*/ return a.hidden || b.hidden? 0.7 : 1;});
+        const tree = d3.layout.tree().nodeSize([500, 500]).separation((a, b) => a.hidden || b.hidden? 0.7 : 1);
         const nodes = tree.nodes(root);
         const links = tree.links(nodes);
-        console.log("NODES OF TREE", nodes);
-        console.log("LINKS OF TREE", links);
         return [nodes, links, structuredArray];
     } else {
         for (const id of graph.nodes()) {
@@ -206,7 +201,7 @@ function compareNodes(aID, bID, array, visited){
     const itsCoupleIsVisited = id => haveCouple(id) && ((array[id].couples[0] in visited) /*|| (array[id].coupleOf in visited)*/);
     const itsCoupleHaveParents = id => haveCouple(id) && array[array[id].couples[0]].parents.length>0;
     const childrenLength = id => haveCouple(id)? array[id].children.length + array[array[id].couples[0]].children.length : array[id].children.length;
-    if (array[aID].parents[0] == -1 || array[bID].parents[0] == -1){
+    if (parseInt(array[aID].parents[0]) === -1 || parseInt(array[bID].parents[0]) === -1){
         if (aID < 0) return 1;
         else if (bID < 0) return -1;
         else if ((haveCouple(aID) && array[aID].couples[0] === bID) || (haveCouple(bID) && array[bID].couples[0] === aID)) return 0;
@@ -250,10 +245,11 @@ function compareNodes(aID, bID, array, visited){
 }
 
 function buildDFSStructure(array, rootID, visited = {}) {
+    rootID = parseInt(rootID);
     if (!(rootID in visited)) {
         visited[rootID] = true;
         array[rootID].children = array[rootID].children.sort((a, b) => compareNodes(a, b, array, visited))
-        if (rootID == -1) {
+        if (rootID === -1) {
             return { name: "root", id: -1, hidden: true, children: array[-1].children.map(childID => buildDFSStructure(array, childID, visited)).flat() }
         } else if (array[rootID].couples.length === 0 && array[rootID].coupleOf === null) {
             return { name: array[rootID].name, id: rootID, hidden: false, no_parent: array[rootID].parents.length > 0, children: array[rootID].children.map(childID => buildDFSStructure(array, childID, visited)).flat() }

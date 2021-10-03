@@ -36,15 +36,6 @@ class IndividualForm extends Component {
                 </Row>
 
                 <ComplementaryInfoNavBar alive={this.state.alive} saveInfo={this.props.updateNode} getNodeInfo={this.props.getNodeInfo}/>
-
-                <div className="col-12">
-                    <div className="form-check">
-                        <input className="form-check-input" type="checkbox" id="highlight" onChange={(event) => this.props.updateNode('highlight', event.target.checked)} />
-                        <label className="form-check-label" htmlFor="highlight">
-                            Highlight
-                        </label>
-                    </div>
-                </div>
             </Form>
         )
     }

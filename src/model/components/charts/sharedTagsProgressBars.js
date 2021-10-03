@@ -1,14 +1,8 @@
 import React, { Component } from 'react';
 import { Row, Col, Progress, UncontrolledTooltip } from 'reactstrap';
 import { stringToID } from '../../auxiliars'
-import {GENDER_COLORS} from './constants'
-import {GENDERS} from '../../constants'
 
-//TODO: Start to subtract information depending on the name of siblings
 class SharedTagsProgressBars extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     genderFrequenciesFromNodes(nodes) {
         let genderFrequency = {};
@@ -56,7 +50,7 @@ class SharedTagsProgressBars extends Component {
             {Object.keys(tagOccurrences).length === 0? <h5 className='statistics-subtitle'>
                                                                 {this.props.graph.nodes[this.props.selectedNode].properties.name} has not known {this.props.propertyToShow.toLowerCase()}
                                                             </h5> : null}
-            {heritage.map(tag => <ProgressBar tag={tag} tagInfo={tagOccurrences[tag]}
+            {heritage.map(tag => <ProgressBar key={`${tag}-progress-bars`} tag={tag} tagInfo={tagOccurrences[tag]}
                                                     ancestorsLength={ancestorsLength} genderFrequencies={genderFrequencies} />)}
             {emergent.length > 0 ? <h4 className="statistics-subtitle no-detected-ancestors">No ancestors with: {emergent.join(', ')}</h4> : null}
         </React.Fragment>)
@@ -114,9 +108,9 @@ class ProgressBarByGender extends Component {
 
         return (<React.Fragment>
                 {Object.entries(this.props.tagInfo.frequency.byGender).map(([gender, genFreq]) =>
-                    <React.Fragment>
-                            <Col sm = {2} md = {3} xl = {2} key = {stringToID(this.props.tag) + '-' + stringToID(gender)+'-col'}>
-                                <h5 className="statistics-subtitle progress-bar-definition" key={stringToID(this.props.tag) + '-' + stringToID(gender)}>{gender}</h5>
+                    <React.Fragment key={`${stringToID(this.props.tag)}-${gender}-progress-fragment`}>
+                            <Col key={`${stringToID(this.props.tag)}-${gender}-progress-col`} sm = {2} md = {3} xl = {2}>
+                                <h5 key={stringToID(this.props.tag) + '-' + stringToID(gender)} className="statistics-subtitle progress-bar-definition">{gender}</h5>
                             </Col>
                             <Col  sm = {Object.keys(this.props.tagInfo.frequency.byGender).length > 1? 4 :  10} 
                                   md = {Object.keys(this.props.tagInfo.frequency.byGender).length > 1? 3 :  9} 

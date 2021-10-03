@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import TreeNode from './treeNode';
 import AddIndependentNodeButton from './addIndependentNodeButton';
-import { Container, Row, Col } from 'reactstrap';
+import { Container } from 'reactstrap';
+import MarriageLink from './auxiliars/marriageLink';
 
 const WIDTH = 0;
 const HEIGHT = 1;
@@ -23,7 +24,7 @@ class FamilyTreeContainer extends Component {
     }
 
     updateNode(id, newProperties) {
-        if(id in this.props.familyGraph.nodes){
+        if (id in this.props.familyGraph.nodes) {
             this.props.familyGraph.nodes[id].properties = newProperties;
         } else {
             throw new Error("Trying to update a non-existing node?")
@@ -36,25 +37,26 @@ class FamilyTreeContainer extends Component {
         this.props.updateState();
     }
 
-    getLinkComponent(link){
-        const sx = link.sx, sy = link.sy, dx = link.dx, dy = link.dy;
-        if (link.sid < 0 || link.did < 0) return null;
-        else if (sy === dy){
-            const style = {top : topPosition(sy), left: dx-sx < 0? dx : sx,  width : Math.abs(dx - sx)}
-            return <div className={link.relationship === 'couple'? 'relationship-link marriage-link' : 'relationship-link'} style = {style}/>
-        } else if (sx === dx){
-            const style = {top : topPosition(sy), left: dx-sx < 0? dx : sx,  height : Math.abs(dy - sy)}
-            return <div className='relationship-link' style = {style}/>
-        } else{
+    getLinkComponent(link) {
+        const sx = link.sx, sy = link.sy, dx = link.dx, dy = link.dy, sid = link.sid, did = link.did;
+        if (sid < 0 || did < 0) return null;
+        else if (sy === dy) {
+            const style = { top: topPosition(sy), left: dx - sx < 0 ? dx : sx, width: Math.abs(dx - sx) }
+            return <MarriageLink key={`${sid}-to-${did}-marriage-link`} style={style} sid={sid} did={did} save={this.saveNode} nodeID={sid}
+                     nodeName = {`${link.sname} and ${link.dname}`}/>
+        } else if (sx === dx) {
+            const style = { top: topPosition(sy), left: dx - sx < 0 ? dx : sx, height: Math.abs(dy - sy) }
+            return <div key={`${sid}-to-${did}-link`} className='relationship-link' style={style} />
+        } else {
             //Break in 3 divs
-            const breakPointLenght = (dy - sy)/2;
+            const breakPointLenght = (dy - sy) / 2;
             const breakPoint = sy + breakPointLenght;
-            return (<React.Fragment>
-                        <div className='relationship-link' style={{top : topPosition(sy), left: sx,  height : breakPointLenght}}/>
-                        <div className='relationship-link' style={{top : topPosition(breakPoint), left: dx-sx < 0? dx : sx,  width : Math.abs(dx-sx) + LINE_THICKNESS}}/>
-                        <div className='relationship-link' style={{top : topPosition(breakPoint), left: dx,  height : breakPointLenght}}/>
-                    </React.Fragment>
-            
+            return (<React.Fragment key={`${sid}-to-${did}-link`}>
+                <div key={`${sid}-to-${did}-link-v1`} className='relationship-link' style={{ top: topPosition(sy), left: sx, height: breakPointLenght }} />
+                <div key={`${sid}-to-${did}-link-h1`} className='relationship-link' style={{ top: topPosition(breakPoint), left: dx - sx < 0 ? dx : sx, width: Math.abs(dx - sx) + LINE_THICKNESS }} />
+                <div key={`${sid}-to-${did}-link-h2`} className='relationship-link' style={{ top: topPosition(breakPoint), left: dx, height: breakPointLenght }} />
+            </React.Fragment>
+
             )
         }
 
@@ -65,19 +67,21 @@ class FamilyTreeContainer extends Component {
         return (<section id="family-tree-container">
             {nodes.map(nodeInfo => (
                 <Container key={'tree-node-container' + nodeInfo.node.id} className="tree-node-container"
-                    style={{ top: topPosition(nodeInfo.y), left: nodeInfo.x,
-                             width: nodeInfo.size[WIDTH], height: nodeInfo.size[HEIGHT],
-                             zIndex : this.props.visible? 1 : -1 }} >
+                    style={{
+                        top: topPosition(nodeInfo.y), left: nodeInfo.x,
+                        width: nodeInfo.size[WIDTH], height: nodeInfo.size[HEIGHT],
+                        zIndex: this.props.visible ? 1 : -1
+                    }} >
                     <TreeNode key={'tree-node-' + nodeInfo.node.id} node={nodeInfo.node} delete={this.deleteNode.bind(this, nodeInfo.node.id)} save={this.saveNode}
-                        update={this.updateNode}/>
+                        update={this.updateNode} graph={this.props.familyGraph} />
                 </Container>
             ))}
             {links.map(link => this.getLinkComponent(link))}
             {Object.keys(this.props.familyGraph.nodes).length === 0 ? (
-                <div tag="section" className="plant-tree-container" style={{zIndex : this.props.visible? 1 : -1}}>
-                            <AddIndependentNodeButton text="Plant the tree" save={this.saveNode} />
+                <div key='plant-your-tree-wrapper' className="plant-tree-container" style={{ zIndex: this.props.visible ? 1 : -1 }}>
+                    <AddIndependentNodeButton key='plant-your-tree-button' text="Plant your tree" save={this.saveNode} />
                 </div>) : null}
-            </section>
+        </section>
         )
     }
 }

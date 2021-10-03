@@ -38,12 +38,14 @@ class MainFrame extends Component {
         //TODO: Maybe the Family tree container should be deleted when fade is in, because could produce a undesired scroll below (but it would be preferred with a fade transition)
         return (
             <div>
-                <MainMenu selectOption={this.selectOption} additionalOptions={Object.keys(this.ADDITIONAL_OPTIONS)} className="main-menu"
+                <MainMenu key='main-menu-navbar' selectOption={this.selectOption} additionalOptions={Object.keys(this.ADDITIONAL_OPTIONS)} className="main-menu"
                           downloadFunction = {this.downloadTree} uploadFunction = {this.uploadTree} isEmpty={this.state.familyGraph.isEmpty()}/>
-                    {!visible? <FamilyTreeContainer familyGraph={this.state.familyGraph} visible={!visible} updateState={this.updateState}/> : null}
+                    {!visible? <FamilyTreeContainer key='family-tree-container' familyGraph={this.state.familyGraph}
+                                                     visible={!visible} updateState={this.updateState}/> 
+                                                     : null}
                 
-                <Fade in={visible} className = "options-background" style={{zIndex : visible? 1 : -1}}>
-                    {visible? <StatisticsFrame graph={this.state.familyGraph}/> : null}
+                <Fade key='statistics-frame-fade-div' in={visible} className = "options-background" style={{zIndex : visible? 1 : -1}}>
+                    {visible? <StatisticsFrame key='statistics-frame' graph={this.state.familyGraph}/> : null}
                 </Fade>
             </div>
         )

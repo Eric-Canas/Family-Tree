@@ -9,8 +9,12 @@ class AddNodeButton extends Component {
     render() {
         return (
             <ButtonGroup className="add-node-button" aria-label="Adds a new relative">
-                {NODE_RELATIONS.map(relationship => <Button key={relationship} color="secondary" aria-label={"Adds a " + relationship}
-                    onClick={() => this.props.showModal(relationship)}>{relationship}</Button>)}
+                {NODE_RELATIONS.map(relationship => 
+                    <Button key={relationship} color="secondary" aria-label={"Adds a " + relationship}
+                        onClick={() => this.props.showModal(relationship)} 
+                        disabled={(relationship === "Couple" && this.props.haveCouple) || (relationship === "Parent" && this.props.haveBothParents)}>
+                            {relationship}
+                    </Button>)}
                 {this.props.editButtons ?
                     (<React.Fragment>
                         <Button type="button" color="primary" onClick={() => this.props.showModal(null)}>

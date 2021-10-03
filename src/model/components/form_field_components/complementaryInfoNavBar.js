@@ -14,7 +14,7 @@ class ComplementaryInfoNavBar extends Component {
                                         "Health": <HealthDetails saveInfo={this.props.saveInfo} getNodeInfo={this.props.getNodeInfo}/>,
                                         "Defunction": <DefunctionDetails saveInfo={this.props.saveInfo} getNodeInfo={this.props.getNodeInfo}/>
                                        }
-        this.state = { active: null };
+        this.state = { active: "Location" };
         //Change context or close if same button is clicked twice
         this.setActive = (section => this.setState({ active: section !== this.state.active ? section : null }))
     }

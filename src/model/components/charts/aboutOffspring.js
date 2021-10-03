@@ -59,34 +59,35 @@ class AboutOffspring extends Component {
             <h4 className="statistics-subtitle"> About Offspring </h4>
             <Container>
                 {Object.entries(gendersInfo).map(([generation, genders]) => Object.keys(genders).length > 0 ?
-                    <Row className="align-items-center">
-                        <Col md={2}>
-                            <h5 className="statistics-subtitle text-center"> Generation {generation} {yearsInfo[generation].minYear !== Infinity? <br/> : null}
+                    <Row key={`generation-${generation}-row`} className="align-items-center">
+                        <Col key={`generation-${generation}-header-col`} md={2}>
+                            <h5 key={`generation-${generation}-header`} className="statistics-subtitle text-center">
+                                 Generation {generation} {yearsInfo[generation].minYear !== Infinity? <br key={`generation-${generation}-br`}/> : null}
                                 {yearsInfo[generation].minYear !== Infinity? ' (Born around '+yearsInfo[generation].minYear + 
                                             (yearsInfo[generation].maxYear !== yearsInfo[generation].minYear? ' ~ '+yearsInfo[generation].maxYear+')' : ')') : ''} 
                             </h5>
                         </Col>
-                        <Col md={10}>
-                                <Table className = "statistics-table" hover={true} dark>
-                                    <thead>
-                                        <tr>
-                                            <th>Gender</th>
-                                            <th>First Child At</th>
-                                            <th>Last Child At</th>
-                                            <th>Average Children</th>
+                        <Col key={`generation-${generation}-table-col`} md={10}>
+                                <Table key={`generation-${generation}-table`} className = "statistics-table" hover={true} dark>
+                                    <thead key={`generation-${generation}-thead`}>
+                                        <tr key={`generation-${generation}-thead-tr`}>
+                                            <th key={`generation-${generation}-thead-gender`}>Gender</th>
+                                            <th key={`generation-${generation}-thead-first-child`}>First Child At</th>
+                                            <th key={`generation-${generation}-thead-last-child`}>Last Child At</th>
+                                            <th key={`generation-${generation}-thead-avg-children`}>Average Children</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody key={`generation-${generation}-tbody`}>
                                         {Object.entries(genders).map(([gender, info]) =>
-                                        <tr scope="row">
-                                            <td>{gender}s</td>
-                                            <td>
+                                        <tr key={`generation-${generation}-${gender}-row`}>
+                                            <td key={`generation-${generation}-${gender}-td`}>{gender}s</td>
+                                            <td key={`generation-${generation}-${gender}-first-child`}>
                                                 {info.firstMean !== null? (info.firstMean.toFixed(1) + (info.firstStd !== 0? ` ± ${info.firstStd.toFixed(1)}` : ''))+' Years Old' : '-'}
                                             </td>
-                                            <td>
+                                            <td key={`generation-${generation}-${gender}-last-child`}>
                                                 {info.lastMean !== null? (info.lastMean.toFixed(1) + (info.lastStd !== 0? ` ± ${info.lastStd.toFixed(1)}` : ''))+' Years Old' : '-'}
                                             </td>
-                                            <td>{info.childrenMean.toFixed(info.childrenStd !== 0? 1 : 0) + (info.childrenStd !== 0? ` ± ${info.childrenStd.toFixed(1)}` : '')} Children</td>
+                                            <td key={`generation-${generation}-${gender}-avg-children`}>{info.childrenMean.toFixed(info.childrenStd !== 0? 1 : 0) + (info.childrenStd !== 0? ` ± ${info.childrenStd.toFixed(1)}` : '')} Children</td>
                                         </tr>)}
                                     </tbody>
                                 </Table>
