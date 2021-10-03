@@ -31,6 +31,12 @@ class FamilyGraph {
     haveBothParents(id){
         id = parseInt(id)
         const infoArray = toStructuredArray(this.graph, this.nodes, false);
+        return infoArray[id].parents.length > 0 && (infoArray[infoArray[id].parents[0]].couples.length > 0 || infoArray[infoArray[id].parents[0]].coupleOf !== null);
+    }
+
+    haveSiblingCoupleWithParents(id){
+        id = parseInt(id)
+        const infoArray = toStructuredArray(this.graph, this.nodes, false);
         // Check if there is a sibling couple with parents
         if (infoArray[id].coupleOf !== null){
             for (const sibling of infoArray[infoArray[id].coupleOf].siblings){
@@ -41,7 +47,7 @@ class FamilyGraph {
                 }
             }
         }
-        return infoArray[id].parents.length > 0 && (infoArray[infoArray[id].parents[0]].couples.length > 0 || infoArray[infoArray[id].parents[0]].coupleOf !== null);
+        return false;
     }
 
     coupleOf(id){
@@ -68,7 +74,6 @@ class FamilyGraph {
                 const level = info.level;
                 if (info.couples.length > 0) info.children = [...info.children, ...structuredArray[parseInt(info.couples[0])].children];
                 else if (info.coupleOf !== null) info.children = [...info.children, ...structuredArray[parseInt(info.coupleOf)].children];
-
                 if (!(level in generations)) generations[level] = {}; 
                 generations[level][id] = info;
             }

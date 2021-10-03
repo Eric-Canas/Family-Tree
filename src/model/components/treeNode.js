@@ -3,7 +3,7 @@ import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle,  Row, Col, 
 import { DEFAULT_AVATAR } from '../constants';
 import AddNodeButton from './addNodeButton';
 import ModalForm from './modalForm';
-const PAD = 75;
+import { adjustViewIfNeeded } from '../auxiliars';
 
 class TreeNode extends Component {
     constructor(props) {
@@ -14,24 +14,9 @@ class TreeNode extends Component {
         this.nodeCopy = {...this.props.node.properties};
         this.updateNode = (newProperties) => this.props.update(this.props.node.id, newProperties)
     }
-
-    adjustViewIfNeeded(event){
-        
-        const boundingBox = event.currentTarget.getBoundingClientRect();
-        const isVisible = {x : (boundingBox.x+boundingBox.width) <  window.innerWidth && boundingBox.x >= 0, y : (boundingBox.y+boundingBox.height) <  window.innerHeight && boundingBox.y >= 0}
-        if (!isVisible.x || !isVisible.y){
-            const x = boundingBox.x < 0? document.documentElement.scrollLeft+(boundingBox.x)-PAD :
-                                         document.documentElement.scrollLeft - window.innerWidth + (boundingBox.x + boundingBox.width)+ PAD;
-            const y = boundingBox.y < 0? document.documentElement.scrollTop+(boundingBox.y)-PAD :
-                                         document.documentElement.scrollTop - window.innerHeight + (boundingBox.y + boundingBox.height)+ PAD
-                                         
-            window.scrollTo(x, y);
-        }
-    }
-
     render() {
         return (
-            <Card className="tree-node" key={'card-' + this.props.node.id} id={'card-' + this.props.node.id} tabIndex={0} onClick={(event) => this.adjustViewIfNeeded(event)}>
+            <Card className="tree-node" key={'card-' + this.props.node.id} id={'card-' + this.props.node.id} tabIndex={0} onClick={(event) => adjustViewIfNeeded(event)}>
                 <Row key={'card-row-' + this.props.node.id}>
                     <Col key={'card-avatar-col-' + this.props.node.id} xs={4} md={4} className="my-auto p-2">
                         <CardImg key={'card-avatar-' + this.props.node.id} src={this.props.node.properties.avatar} className="card-avatar"
@@ -51,7 +36,9 @@ class TreeNode extends Component {
                 </Row>
                 <UncontrolledTooltip key={'card-tooltip-' + this.props.node.id} placement="bottom" className="add-node-tooltip" trigger="focus"
                          hideArrow={false} target={'card-' + this.props.node.id}>
-                            <AddNodeButton editButtons={true} delete={this.props.delete} showModal={this.showForm} haveBothParents={this.props.graph.haveBothParents(this.props.node.id)}
+                            <AddNodeButton editButtons={true} delete={this.props.delete} showModal={this.showForm} 
+                                            haveBothParents={this.props.graph.haveBothParents(this.props.node.id)}
+                                            haveSiblingCoupleWithParents={this.props.graph.haveSiblingCoupleWithParents(this.props.node.id)}
                                             haveCouple={this.props.graph.coupleOf(this.props.node.id) !== null}/>
                 </UncontrolledTooltip>
                 <ModalForm modal={this.state.showModal} close={this.hideForm} relationship={this.state.relation} 

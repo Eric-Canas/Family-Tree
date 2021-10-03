@@ -100,6 +100,22 @@ async function uploadTree () {
 }
 export{uploadTree};
 
+const PAD = 75;
+function adjustViewIfNeeded(event){
+        
+    const boundingBox = event.currentTarget.getBoundingClientRect();
+    const isVisible = {x : (boundingBox.x+boundingBox.width) <  window.innerWidth && boundingBox.x >= 0, y : (boundingBox.y+boundingBox.height) <  window.innerHeight && boundingBox.y >= 0}
+    if (!isVisible.x || !isVisible.y){
+        const x = boundingBox.x < 0? document.documentElement.scrollLeft+(boundingBox.x)-PAD :
+                                     document.documentElement.scrollLeft - window.innerWidth + (boundingBox.x + boundingBox.width)+ PAD;
+        const y = boundingBox.y < 0? document.documentElement.scrollTop+(boundingBox.y)-PAD :
+                                     document.documentElement.scrollTop - window.innerHeight + (boundingBox.y + boundingBox.height)+ PAD
+                                     
+        window.scrollTo(x, y);
+    }
+}
+export {adjustViewIfNeeded};
+
 function getRandomNumber(range=100000000){
     return ~~(Math.random()*range)
 }

@@ -42,19 +42,22 @@ class TagsFrequency extends Component {
                     </div>
 
                     <Container>
-                    <Row className="align-items-center">
-                        <Col md = {isInformation? 6 : 12}>
-                        {isInformation? <h4 className = "statistics-subtitle text-center"> {this.props.doughnutTitle || 'Chart title not set'} </h4> : null}
-                            {firstOfLevel? <h4 className = "statistics-subtitle text-center">{name} has not known ancestors</h4> : 
-                            Object.keys(chartData).length === 0? <h4 className = "statistics-subtitle">{name} antecesors has not known {this.props.propertyToShow.toLowerCase()}</h4> :
-                            <Doughnut data={this.getChartData(this.state.selectedNode)} options={this.charOptions} />}
-                        </Col>
-                        {isInformation?
-                        <Col md = {6}>
-                        <h4 className = "statistics-subtitle">Heritage</h4>
-                            <SharedTagsProgressBars graph={this.props.graph} property = {this.props.property} selectedNode = {this.state.selectedNode} propertyToShow={this.props.propertyToShow}/>
-                        </Col> : null}
-                    </Row>
+                        <Row className="align-items-center">
+                            <Col md = {isInformation? 6 : 12}>
+                            {isInformation? <h4 className = "statistics-subtitle text-center"> {this.props.doughnutTitle || 'Chart title not set'} </h4> : null}
+                                {firstOfLevel? <h4 className = "statistics-subtitle text-center">{name} has not known ancestors</h4> : 
+                                Object.keys(chartData).length === 0? <h4 className = "statistics-subtitle">{name} antecesors has not known {this.props.propertyToShow.toLowerCase()}</h4> :
+                                <Doughnut data={this.getChartData(this.state.selectedNode)} options={this.charOptions} />}
+                            </Col>
+                            {isInformation?
+                            <Col md = {6}>
+                            <h4 className = "statistics-subtitle" 
+                                title = {`Ancestors sharing ${this.props.graph.nodes[this.state.selectedNode].properties.name}'s ${this.props.propertyToShow.toLowerCase()}`}>
+                                Heritage
+                            </h4>
+                                <SharedTagsProgressBars graph={this.props.graph} property = {this.props.property} selectedNode = {this.state.selectedNode} propertyToShow={this.props.propertyToShow}/>
+                            </Col> : null}
+                        </Row>
                     </Container>
                     <h4 className = "statistic-selector-header"> Statistics for <Input type="select" className="individual-selector" onChange={(event) => this.setOption(event.target.value)}
                                                                                        defaultValue = {this.state.selectedNode}>

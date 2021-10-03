@@ -6,13 +6,30 @@ import { faPencilAlt, faTimes } from '@fortawesome/free-solid-svg-icons'
 
 class AddNodeButton extends Component {
 
+    getTitle(relationship){
+        if(relationship === "Couple" && this.props.haveCouple){
+            return "Only one couple is allowed";
+        } else if (relationship === "Parent"){
+            if (this.props.haveBothParents){
+                return "Already have two parents"
+            } else if (this.props.haveSiblingCoupleWithParents){
+                return "There is already a sibling couple with ancestors";
+            } else {
+                return "";
+            }
+        } else {
+            return ""
+        }
+    }
+
     render() {
         return (
             <ButtonGroup className="add-node-button" aria-label="Adds a new relative">
                 {NODE_RELATIONS.map(relationship => 
                     <Button key={relationship} color="secondary" aria-label={"Adds a " + relationship}
                         onClick={() => this.props.showModal(relationship)} 
-                        disabled={(relationship === "Couple" && this.props.haveCouple) || (relationship === "Parent" && this.props.haveBothParents)}>
+                        disabled={(relationship === "Couple" && this.props.haveCouple) || (relationship === "Parent" && (this.props.haveBothParents || this.props.haveSiblingCoupleWithParents))}
+                        title = {this.getTitle(relationship)}>
                             {relationship}
                     </Button>)}
                 {this.props.editButtons ?

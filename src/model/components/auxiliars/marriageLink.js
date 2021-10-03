@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, UncontrolledTooltip } from 'reactstrap';
 import ModalForm from '../modalForm';
+import {adjustViewIfNeeded} from '../../auxiliars'
 
 class MarriageLink extends Component {
     constructor(props){
@@ -12,7 +13,7 @@ class MarriageLink extends Component {
     render() {
         return (
                     <div key={`div-${this.props.sid}-to-${this.props.did}-link`} id = {`div-${this.props.sid}-to-${this.props.did}-link`}
-                             className='relationship-link marriage-link' style={this.props.style} tabIndex={0}>
+                             className='relationship-link marriage-link' style={this.props.style} tabIndex={0} onClick={(event) => adjustViewIfNeeded(event)}>
                         <UncontrolledTooltip key={`${this.props.sid}-to-${this.props.did}-link-tooltip`} placement="bottom" className="add-node-tooltip" trigger="focus"
                                                 hideArrow={false} target={`div-${this.props.sid}-to-${this.props.did}-link`}>
                                 <Button key="add-child-tooltip" color="secondary" aria-label="Adds a child to the couple" onClick={this.showForm}>

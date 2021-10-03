@@ -115,6 +115,11 @@
   z-index: 0;
 }
 
+.btn:disabled {
+  pointer-events: auto;
+  cursor: default;
+}
+
 .invisible {
   display: none !important;
 }

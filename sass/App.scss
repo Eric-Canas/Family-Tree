@@ -128,6 +128,11 @@ $marriageColor : #909090;
     }
 }
 
+.btn:disabled{
+    pointer-events: auto;
+    cursor: default;
+}
+
 .invisible {
     display: none !important;
 }

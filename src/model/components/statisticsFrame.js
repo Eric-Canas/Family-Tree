@@ -18,7 +18,6 @@ class StatisticsFrame extends Component {
                 <LocationInformation graph={this.props.graph}/>
                 <hr className='statistics-separator'/>
                 <Curiosities graph={this.props.graph}/>
-                <hr className='statistics-separator'/>
             </Container>
         )
     };
